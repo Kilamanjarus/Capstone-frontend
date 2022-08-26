@@ -26,6 +26,13 @@ export default {
         console.log(response.data)
       })
     },
+    workoutExerciseUpdate: function (currentExercise) {
+      console.log('Updating Exercise...')
+      console.log(currentExercise)
+      axios.patch(`http://localhost:3000/workouts/${currentExercise.id}`, currentExercise).then(response => {
+        console.log(response.data)
+      })
+    }
   },
 };
 </script>
@@ -40,10 +47,16 @@ export default {
       <p><b>Sets: </b><input type="text" v-model="workoutExercise.sets"></p>
       <p><b>Exercise ID: </b><button @click="workoutExerciseCreate">Add to Routine!</button></p>
     </div>
+    <p><b>Current Workout:</b></p>
     <div>
-      <p v-for="currentExercise in workoutExercises">
-        {{ currentExercise }}
-      </p>
+      <div v-for="currentExercise in workoutExercises">
+        <p>Exercise ID: <input type="text" v-model="currentExercise.exercise_id"></p>
+        <p>Weight: <input type="text" v-model="currentExercise.added_weight"></p>
+        <p>Sets: <input type="text" v-model="currentExercise.sets"></p>
+        <p>Reps: <input type="text" v-model="currentExercise.reps"></p>
+        <button @click="workoutExerciseUpdate(currentExercise)">Update Exorcise</button>
+        <br>
+      </div>
     </div>
   </div>
 </template>
