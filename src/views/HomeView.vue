@@ -7,11 +7,14 @@ export default {
       message: "Welcome to Vue.js!",
       workoutExercises: {},
       workoutExercise: {},
-      errors: {}
+      errors: {},
+      workouts: {},
+      newWorkout: {}
     };
   },
   created: function () {
     this.workoutExerciseIndex();
+    this.workoutsIndex();
   },
   methods: {
     workoutExerciseIndex: function () {
@@ -38,6 +41,20 @@ export default {
           this.errors = error.response.data.errors;
           console.log(this.errors)
         });
+    },
+    workoutsIndex: function () {
+      console.log(`Getting workouts...`)
+      axios.get(`http://localhost:3000/workouts`).then(response => {
+        console.log(response.data)
+        this.workouts = response.data
+      })
+    },
+    workoutsCreate: function () {
+      console.log(`Creating new workout...`)
+      axios.post(`http://localhost:3000/workouts`, this.newWorkout).then(response => {
+        console.log(response.data)
+        this.workouts.push(response.data)
+      })
     }
   },
 };
@@ -54,6 +71,9 @@ export default {
       <p><b>Exercise ID: </b><button @click="workoutExerciseCreate">Add to Routine!</button></p>
     </div>
     <p><b>Current Workout:</b></p>
+    <b>Title: </b>
+    <input type="text" v-model="newWorkout.title">
+    <button @click="workoutsCreate">Create Workout!</button>
     <div>
       <div v-for="currentExercise in workoutExercises">
         <div v-if="currentExercise.status === `added`">
@@ -67,6 +87,12 @@ export default {
         </div>
       </div>
     </div>
+  </div>
+  <div>
+    <p><b>All Workouts!</b></p>
+    <p v-for="workout in workouts">
+    <div>{{ workout.title }}</div>
+    </p>
   </div>
 </template>
 
