@@ -4,7 +4,7 @@ import axios from "axios";
 export default {
   data: function () {
     return {
-      message: "Welcome to Vue.js!",
+      message: "Welcome to Work Out Your Workouts! Your one stop shop to customizing and planning a workout!",
       errors: {},
 
       routines: {},
@@ -13,14 +13,10 @@ export default {
       workouts: {},
       newWorkout: {},
       selectedWorkout: {},
-
-      exercises: {}
     };
   },
   created: function () {
     this.routineIndex();
-    this.workoutsIndex();
-    this.exercisesIndex();
   },
   methods: {
     routineIndex: function () {
@@ -55,30 +51,6 @@ export default {
         console.log(response.data)
         // this.$router.push("/routine") multi page this will work...
       })
-    },
-    workoutsIndex: function () {
-      console.log(`Getting workouts...`)
-      axios.get(`http://localhost:3000/workouts.json`).then(response => {
-        console.log(response.data)
-        this.workouts = response.data
-      })
-    },
-    workoutsCreate: function () {
-      console.log(`Creating new workout...`)
-      axios.post(`http://localhost:3000/workouts.json`, this.newWorkout).then(response => {
-        console.log(response.data)
-        this.workouts.push(response.data)
-      })
-    },
-    workoutsShow: function (selectedWorkout) {
-      console.log(`Showing selected workout....`)
-    },
-    exercisesIndex: function () {
-      console.log(`Retrieving exercises...`)
-      axios.get("http://localhost:3000/exercises.json").then(response => {
-        console.log(response.data)
-        this.exercises = response.data
-      })
     }
   },
 };
@@ -87,12 +59,6 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
-    <h2>Exercises:</h2>
-    {{exercises}}
-    <p v-for="exercise in exercises">
-      {{exercise.name}}
-      {{exercise.id}}
-    </p>
     <div>
       <p><b>Exercise ID: </b><input type="text" v-model="newRoutine.exercise_id"></p>
       <p><b>Weights: </b><input type="text" v-model="newRoutine.added_weight"></p>
@@ -121,19 +87,6 @@ export default {
         </div>
       </div>
     </div>
-  </div>
-  <div>
-    <p><b>All Workouts!</b></p>
-    <p v-for="workout in workouts">
-      {{ workout.title }}
-    <div><button @click="workoutsShow(selectedWorkout)">Show more</button></div>
-    <br />
-    <div v-for="exercise in workout.exercises">
-      {{ exercise.name }}
-    </div>
-    <p></p>
-    </p>
-    <p>******************************************************************************</p>
   </div>
 </template>
 
