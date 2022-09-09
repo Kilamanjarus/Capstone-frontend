@@ -5,16 +5,22 @@ export default {
   data: function () {
     return {
       message: "Welcome to Vue.js!",
+      errors: {},
+
       routines: {},
       newRoutine: {},
-      errors: {},
+
       workouts: {},
-      newWorkout: {}
+      newWorkout: {},
+      selectedWorkout: {},
+
+      exercises: {}
     };
   },
   created: function () {
     this.routineIndex();
     this.workoutsIndex();
+    this.exercisesIndex();
   },
   methods: {
     routineIndex: function () {
@@ -43,8 +49,12 @@ export default {
           console.log(this.errors)
         });
     },
-    routineDelete: function () {
-      console.log(`Deleting exercise from routine...`)
+    routineDelete: function (currentExercise) {
+      axios.delete(`http://localhost:3000/routines/${currentExercise.id}).json`).then(response => {
+        console.log(`Deleting exercise from routine...`)
+        console.log(response.data)
+        // this.$router.push("/routine") multi page this will work...
+      })
     },
     workoutsIndex: function () {
       console.log(`Getting workouts...`)
@@ -59,6 +69,16 @@ export default {
         console.log(response.data)
         this.workouts.push(response.data)
       })
+    },
+    workoutsShow: function (selectedWorkout) {
+      console.log(`Showing selected workout....`)
+    },
+    exercisesIndex: function () {
+      console.log(`Retrieving exercises...`)
+      axios.get("http://localhost:3000/exercises.json").then(response => {
+        console.log(response.data)
+        this.exercises = response.data
+      })
     }
   },
 };
@@ -67,6 +87,12 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
+    <h2>Exercises:</h2>
+    {{exercises}}
+    <p v-for="exercise in exercises">
+      {{exercise.name}}
+      {{exercise.id}}
+    </p>
     <div>
       <p><b>Exercise ID: </b><input type="text" v-model="newRoutine.exercise_id"></p>
       <p><b>Weights: </b><input type="text" v-model="newRoutine.added_weight"></p>
@@ -78,16 +104,20 @@ export default {
     <b>Title: </b>
     <input type="text" v-model="newWorkout.title">
     <button @click="workoutsCreate">Create Workout!</button>
-    <p><b>Current Routine Exercies:</b></p>
+    <p><b>Current Routine Exercises:</b></p>
     <div>
       <div v-for="currentExercise in routines">
         <div v-if="currentExercise.status === `added`">
           {{ currentExercise.id }}
+          <button @click="routineDelete(currentExercise)">Delete Exercise</button>
           <p>Exercise ID: <input type="text" v-model="currentExercise.exercise_id"></p>
           <p>Weight: <input type="text" v-model="currentExercise.added_weight"></p>
           <p>Sets: <input type="text" v-model="currentExercise.sets"></p>
           <p>Reps: <input type="text" v-model="currentExercise.reps"></p>
           <button @click="routineUpdate(currentExercise)">Update Exorcise</button>
+          <p>
+            <br />
+          </p>
         </div>
       </div>
     </div>
@@ -95,11 +125,18 @@ export default {
   <div>
     <p><b>All Workouts!</b></p>
     <p v-for="workout in workouts">
-    <div>{{ workout.title }}</div>
-    <div v-for="routine in workout.routines">{{ routine }}</div>
+      {{ workout.title }}
+    <div><button @click="workoutsShow(selectedWorkout)">Show more</button></div>
+    <br />
+    <div v-for="exercise in workout.exercises">
+      {{ exercise.name }}
+    </div>
+    <p></p>
     </p>
+    <p>******************************************************************************</p>
   </div>
 </template>
 
 <style>
+
 </style>
