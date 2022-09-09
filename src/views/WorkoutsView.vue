@@ -28,9 +28,6 @@ export default {
         this.workouts.push(response.data)
       })
     },
-    workoutsShow: function (selectedWorkout) {
-      console.log(`Showing selected workout....`)
-    },
   },
 };
 </script>
@@ -40,10 +37,14 @@ export default {
     <h1>{{ message }}</h1>
   </div>
   <p><b>All Workouts!</b></p>
+
   <p v-for="workout in workouts">
-    {{ workout.title }}
-  <div><button @click="workoutsShow(selectedWorkout)">Show more</button></div>
+  <div>
+    <a v-bind:href="`/workouts/${workout.id}`"> {{ workout.title }}</a>
+  </div>
   <br />
+  <!-- {{workout}} -->
+  {{workout.routines}}
   <div v-for="exercise in workout.exercises">
     {{ exercise.name }}
   </div>

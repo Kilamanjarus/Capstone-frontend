@@ -4,6 +4,7 @@ import SignupView from "../views/SignupView.vue";
 import LoginView from "../views/LoginView.vue";
 import ExercisesView from "../views/ExercisesView.vue";
 import WorkoutsView from "../views/WorkoutsView.vue";
+import WorkoutsShow from "../views/WorkoutsShow.vue";
 
 
 
@@ -29,9 +30,14 @@ const routes = [
     component: ExercisesView
   },
   {
-    path: '/Workouts',
-    name: 'Workouts',
+    path: '/workouts',
+    name: 'workouts',
     component: WorkoutsView
+  },
+  {
+    path: '/workouts/:id',
+    name: 'Workouts-show',
+    component: WorkoutsShow
   },
   {
     path: '/about',
