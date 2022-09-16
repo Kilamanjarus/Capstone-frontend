@@ -5,7 +5,8 @@ export default {
   data: function () {
     return {
       message: "Exercise List!",
-      exercises: {}
+      exercises: {},
+      added: false,
     };
   },
   created: function () {
@@ -18,6 +19,10 @@ export default {
         console.log(response.data)
         this.exercises = response.data
       })
+    },
+    openOptions: function () {
+      console.log(`Opening up options to add a routine...`)
+
     }
   },
 };
@@ -26,10 +31,15 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
-    {{exercises}}
+    <!-- {{exercises}} -->
     <p v-for="exercise in exercises">
+      <!-- <div v-if <img v-bind:src="exercise.gifUrl" /> -->
+      <img v-bind:src="exercise.gifUrl" />
+    <div>
+      <b>{{exercise.id}}</b>
       {{exercise.name}}
-      {{exercise.id}}
+      <button @click="openOptions();">More info...</button>
+    </div>
     </p>
   </div>
 </template>

@@ -4,7 +4,7 @@ import axios from 'axios';
 export default {
   data: function () {
     return {
-      message: "Welcome to Vue.js!",
+      message: "Welcome to the Workout!",
       workout: {},
       routines: {}
     };
@@ -13,7 +13,7 @@ export default {
     this.workoutsShow();
   },
   methods: {
-    workoutsShow: function (selectedWorkout) {
+    workoutsShow: function () {
       console.log(`Showing selected workout....`)
       axios.get(`http://localhost:3000/workouts/${this.$route.params.id}.json`).then(response => {
         console.log(response.data)
@@ -27,6 +27,7 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
+    <a v-bind:href="`/workouts/${this.$route.params.id}/edit`">Edit</a>
   </div>
   <p><b>Title: </b>{{workout.title}}</p>
   <!-- <p><b>Routines: </b>{{workout.routines}}</p> -->
