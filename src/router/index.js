@@ -6,6 +6,7 @@ import ExercisesView from "../views/ExercisesView.vue";
 import WorkoutsView from "../views/WorkoutsView.vue";
 import WorkoutsShow from "../views/WorkoutsShow.vue";
 import WorkoutsEdit from "../views/WorkoutsEdit.vue";
+import RoutineView from "../views/RoutineView.vue";
 
 
 
@@ -42,8 +43,13 @@ const routes = [
   },
   {
     path: '/workouts/:id/edit',
-    name: 'workouts-wdit',
+    name: 'workouts-edit',
     component: WorkoutsEdit
+  },
+  {
+    path: '/routines',
+    name: 'routines',
+    component: RoutineView
   },
   {
     path: '/about',
