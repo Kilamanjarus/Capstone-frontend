@@ -9,6 +9,11 @@ export default {
       added: false,
       currentExercise: {},
       newRoutine: {},
+
+      exercisePageAmount: 10,
+      exercisesPerPage: 20,
+      pageNumber: 0,
+      exercisesOnPage: {}
     };
   },
   created: function () {
@@ -20,6 +25,13 @@ export default {
       axios.get("http://localhost:3000/exercises.json").then(response => {
         console.log(response.data)
         this.exercises = response.data
+        // if (this.exercises.length / this.exercisesPerPage % 1 > 0) {
+        //   this.exercisePageAmount = (this.exercises.length / this.exercisesPerPage + 1) - (this.exercises.length / this.exercisesPerPage % 1)
+        // }
+        // else {
+        //   this.exercisePageAmount = this.exercises.length / this.exercisesPerPage
+        // }
+        console.log(this.exercisePageAmount)
         console.log(localStorage.jwt)
       })
     },
@@ -43,13 +55,43 @@ export default {
         this.routines.push(response.data)
         this.newRoutine = {}
       })
-    }
+    },
+    setPageNumber: function (page) {
+      this.pageNumber = page - 1
+      console.log(this.pageNumber)
+      window.scrollTo(0, 0);
+    },
+    setPrevPageNumber: function (page) {
+      this.pageNumber = this.pageNumber - 1
+      console.log(this.pageNumber)
+      window.scrollTo(0, 0);
+    },
+    setNextPageNumber: function (page) {
+      console.log(page)
+      this.pageNumber = this.pageNumber + 1
+      window.scrollTo(0, 0);
+      // console.log(this.pageNumber)
+    },
   },
 };
 </script>
 
 <template>
+  <div class="home">
+    <h1>{{ message }}</h1>
+    <!-- {{exercises}} -->
+    <p v-for="(exercise, index) in exercises">
+      <!-- <div v-if <img v-bind:src="exercise.gifUrl" /> -->
+    <div v-if="index >= pageNumber*20 && index <= (pageNumber+1)*20">
 
+      <img v-bind:src="exercise.gifUrl" />
+      {{exercise.id}}
+      {{exercise.name}}
+      <br />
+      <button @click="openOptions(exercise)">Add to Workout...</button>
+    </div>
+    </p>
+  </div>
 
   <dialog id="routine-details">
     <form method="dialog">
@@ -70,30 +112,28 @@ export default {
       <button>Close</button>
     </form>
   </dialog>
+
+
+
   <div>Here is where I test new stuff</div>
-
-
-
-
-
-
-
 
   <nav aria-label="...">
     <ul class="pagination justify-content-center">
-      <li class="page-item">
+      <li class="page-item disabled" v-if="pageNumber + 1== 1">
         <a class="page-link" href="#">Previous</a>
       </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item active">
-        <span class="page-link">
-          2
-          <span class="sr-only"></span>
-        </span>
+      <li class="page-item" v-if="pageNumber + 1!= 1">
+        <a class="page-link" @click="setPrevPageNumber()">Previous</a>
       </li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#">Next</a>
+      <li class="page-item" v-for="page in exercisePageAmount" :key="page">
+        <a class="page-link" @click="setPageNumber(page)" v-if="page != pageNumber + 1">{{page}}</a>
+        <a class="page-link active" @click="setPageNumber(page)" v-if="page == pageNumber + 1">{{page}}</a>
+      </li>
+      <li class="page-item" v-if="pageNumber + 1== exercisePageAmount">
+        <a class="page-link disabled" @click="setNextPageNumber(page)">Next</a>
+      </li>
+      <li class="page-item" v-if="pageNumber + 1!= exercisePageAmount">
+        <a class="page-link" @click="setNextPageNumber(page)">Next</a>
       </li>
     </ul>
   </nav>
