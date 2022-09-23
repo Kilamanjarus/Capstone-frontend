@@ -21,13 +21,6 @@ export default {
         this.workouts = response.data
       })
     },
-    workoutsCreate: function () {
-      console.log(`Creating new workout...`)
-      axios.post(`http://localhost:3000/workouts.json`, this.newWorkout).then(response => {
-        console.log(response.data)
-        this.workouts.push(response.data)
-      })
-    },
   },
 };
 </script>

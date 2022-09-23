@@ -59,34 +59,7 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
-    <div>
-      <p><b>Exercise ID: </b><input type="text" v-model="newRoutine.exercise_id"></p>
-      <p><b>Weights: </b><input type="text" v-model="newRoutine.added_weight"></p>
-      <p><b>Reps: </b><input type="text" v-model="newRoutine.reps"></p>
-      <p><b>Sets: </b><input type="text" v-model="newRoutine.sets"></p>
-      <p><b>Exercise ID: </b><button @click="routineCreate">Add to Routine!</button></p>
-    </div>
-    <p><b>Current Workout:</b></p>
-    <b>Title: </b>
-    <input type="text" v-model="newWorkout.title">
-    <button @click="workoutsCreate">Create Workout!</button>
-    <p><b>Current Routine Exercises:</b></p>
-    <div>
-      <div v-for="currentExercise in routines">
-        <div v-if="currentExercise.status === `added`">
-          {{ currentExercise.id }}
-          <button @click="routineDelete(currentExercise)">Delete Exercise</button>
-          <p>Exercise ID: <input type="text" v-model="currentExercise.exercise_id"></p>
-          <p>Weight: <input type="text" v-model="currentExercise.added_weight"></p>
-          <p>Sets: <input type="text" v-model="currentExercise.sets"></p>
-          <p>Reps: <input type="text" v-model="currentExercise.reps"></p>
-          <button @click="routineUpdate(currentExercise)">Update Exorcise</button>
-          <p>
-            <br />
-          </p>
-        </div>
-      </div>
-    </div>
+    <h1><a href="/login">Login!</a> | <a href="/signup">Signup!</a></h1>
   </div>
 </template>
 

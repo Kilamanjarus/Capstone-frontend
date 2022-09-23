@@ -1,0 +1,13 @@
+  <div class="home">
+    <h1>{{ message }}</h1>
+    <!-- {{exercises}} -->
+    <p v-for="exercise in exercises">
+      <!-- <div v-if <img v-bind:src="exercise.gifUrl" /> -->
+      <img v-bind:src="exercise.gifUrl" />
+    <div>
+      {{exercise.id}}
+      {{exercise.name}}
+      <button @click="openOptions(exercise)">Add to Workout...</button>
+    </div>
+    </p>
+  </div>

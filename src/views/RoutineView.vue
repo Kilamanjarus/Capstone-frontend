@@ -1,4 +1,5 @@
 <script>
+import router from "@/router";
 import axios from "axios";
 
 export default {
@@ -40,8 +41,10 @@ export default {
     },
     workoutCreate: function () {
       console.log(`Creating new workout...`)
+      console.log(this.newWorkout)
       axios.post(`http://localhost:3000/workouts.json`, this.newWorkout).then(response => {
         console.log(response.data)
+        this.$router.push("/workouts")
       })
     },
     toggleEdit: function () {

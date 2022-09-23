@@ -48,19 +48,7 @@ export default {
 </script>
 
 <template>
-  <div class="home">
-    <h1>{{ message }}</h1>
-    <!-- {{exercises}} -->
-    <p v-for="exercise in exercises">
-      <!-- <div v-if <img v-bind:src="exercise.gifUrl" /> -->
-      <img v-bind:src="exercise.gifUrl" />
-    <div>
-      {{exercise.id}}
-      {{exercise.name}}
-      <button @click="openOptions(exercise)">Add to Workout...</button>
-    </div>
-    </p>
-  </div>
+
 
   <dialog id="routine-details">
     <form method="dialog">
@@ -81,6 +69,33 @@ export default {
       <button>Close</button>
     </form>
   </dialog>
+  <div>Here is where I test new stuff</div>
+
+
+
+
+
+
+
+
+  <nav aria-label="...">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" href="#">Previous</a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item active">
+        <span class="page-link">
+          2
+          <span class="sr-only"></span>
+        </span>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav>
 </template>
 
 <style>
