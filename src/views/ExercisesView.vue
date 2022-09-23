@@ -27,12 +27,12 @@ export default {
         console.log(response.data)
         this.exercises = response.data
         this.updateExercises();
-        // if (this.exercises.length / this.exercisesPerPage % 1 > 0) {
-        //   this.exercisePageAmount = (this.exercises.length / this.exercisesPerPage + 1) - (this.exercises.length / this.exercisesPerPage % 1)
-        // }
-        // else {
-        //   this.exercisePageAmount = this.exercises.length / this.exercisesPerPage
-        // }
+        if (this.exercises.length / this.exercisesPerPage % 1 > 0) {
+          this.exercisePageAmount = (this.exercises.length / this.exercisesPerPage + 1) - (this.exercises.length / this.exercisesPerPage % 1)
+        }
+        else {
+          this.exercisePageAmount = this.exercises.length / this.exercisesPerPage
+        }
         // console.log(this.exercisePageAmount)
         // console.log(localStorage.jwt)
       })
@@ -59,32 +59,36 @@ export default {
       })
     },
     setPageNumber: function (page) {
+      console.log(page)
       this.pageNumber = page
       this.exerciseIndex = page - 1
       console.log(this.pageNumber)
       this.updateExercises(page);
       window.scrollTo(0, 0);
     },
-    setPrevPageNumber: function (page) {
-      this.pageNumber = this.pageNumber
-      this.exerciseIndex = page - 1
+    setPrevPageNumber: function () {
+      this.pageNumber = this.pageNumber - 1
+      this.exerciseIndex = this.pageNumber - 1
       console.log(this.pageNumber)
-      this.updateExercises(page);
+      this.updateExercises(this.pageNumber);
       window.scrollTo(0, 0);
     },
-    setNextPageNumber: function (page) {
-      console.log(page)
-      this.pageNumber = this.pageNumber
-      this.exerciseIndex = page - 1
+    setNextPageNumber: function () {
+      // console.log(this.pageNumber)
+      this.pageNumber = this.pageNumber + 1
+      this.exerciseIndex = this.pageNumber - 1
       window.scrollTo(0, 0);
-      this.updateExercises(page);
+      this.updateExercises(this.pageNumber);
       // console.log(this.pageNumber)
     },
     updateExercises: function (page) {
       console.log("New array is being made...")
+      console.log(page)
       this.exercisesOnPage = []
       for (let i = 0; i < this.exercisesPerPage; i++) {
-        this.exercisesOnPage.push(this.exercises[i + (this.exerciseIndex * this.exercisesPerPage)])
+        if (this.exercises[i + (this.exerciseIndex * this.exercisesPerPage)]) {
+          this.exercisesOnPage.push(this.exercises[i + (this.exerciseIndex * this.exercisesPerPage)])
+        }
       }
       // console.log(this.exercises[0])
       console.log(this.exercisesOnPage)
@@ -143,19 +147,33 @@ export default {
         <a class="page-link" href="#">Previous</a>
       </li>
       <li class="page-item" v-if="pageNumber != 1">
-        <a class="page-link" @click="setPrevPageNumber(page)">Previous</a>
+        <a class="page-link" @click="setPrevPageNumber()">Previous</a>
+      </li>
+      <li class="page-item" v-if="pageNumber >= 5">
+        <a class="page-link" @click="setPageNumber(1)">1</a>
+      </li>
+      <li class="page-item" v-for="page in exercisePageAmount" :key="page">
+        <!-- ... Button for over 3 numbers -->
+      <li class="page-item disabled" v-if="page == pageNumber+3">
+        <a class="page-link" href="#">...</a>
+      </li>
+      <li class="page-item disabled" v-if="page == pageNumber-3">
+        <a class="page-link" href="#">...</a>
       </li>
       <!-- Numbered buttons -->
-      <li class="page-item" v-for="page in exercisePageAmount" :key="page">
-        <a class="page-link" @click="setPageNumber(page)" v-if="page != pageNumber ">{{page}}</a>
-        <a class="page-link active" @click="setPageNumber(page)" v-if="page == pageNumber ">{{page}}</a>
+      <a class="page-link" @click="setPageNumber(page)"
+        v-if="page != pageNumber  && page > pageNumber-3 && page < pageNumber+3">{{page}}</a>
+      <a class="page-link active" @click="setPageNumber(page)" v-if="page == pageNumber">{{page}}</a>
       </li>
       <!-- Next Button -->
+      <li class="page-item" v-if="pageNumber <= exercisePageAmount-4">
+        <a class="page-link" @click="setPageNumber(this.exercisePageAmount)">{{exercisePageAmount}}</a>
+      </li>
       <li class="page-item" v-if="pageNumber == exercisePageAmount">
         <a class="page-link disabled" href="#">Next</a>
       </li>
       <li class=" page-item" v-if="pageNumber != exercisePageAmount">
-        <a class="page-link" @click="setNextPageNumber(page)">Next</a>
+        <a class="page-link" @click="setNextPageNumber()">Next</a>
       </li>
     </ul>
   </nav>
