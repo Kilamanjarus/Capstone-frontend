@@ -2,9 +2,9 @@
   <nav>
     <router-link to="/">Home</router-link> |
 
-    <router-link to="/signup">Signup</router-link> |
-    <router-link to="/login">Login</router-link> |
-    <router-link to="/logout">Logout</router-link> |
+    <router-link v-if="!isLoggedIn" to="/signup">Signup</router-link> <span v-if="!isLoggedIn"> | </span>
+    <router-link v-if="!isLoggedIn" to="/login">Login</router-link> <span v-if="!isLoggedIn"> | </span>
+    <router-link v-if="isLoggedIn" to="/logout">Logout</router-link> <span v-if="isLoggedIn"> | </span>
 
     <router-link to="/exercises">Exercises</router-link> |
     <router-link to="/routines">Current Routines</router-link> |
@@ -14,6 +14,10 @@
   </nav>
   <router-view />
 </template>
+
+localStorageCheck: function () {
+  return !!localStorage.jwt
+},
 
 <script>
 export default {

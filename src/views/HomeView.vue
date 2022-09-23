@@ -13,45 +13,17 @@ export default {
       workouts: {},
       newWorkout: {},
       selectedWorkout: {},
+
+      storageJwt: false,
     };
   },
   created: function () {
-    this.routineIndex();
+    this.localStorageCheck();
   },
   methods: {
-    routineIndex: function () {
-      console.log("Pulling all Exercises added to workouts...")
-      axios.get("http://localhost:3000/routines.json").then(response => {
-        console.log(response.data)
-        this.routines = response.data
-      })
+    localStorageCheck: function () {
+      return !!localStorage.jwt
     },
-    routineCreate: function () {
-      console.log("Adding Exercise to Workout...")
-      axios.post("http://localhost:3000/routines.json", this.newRoutine).then(response => {
-        console.log(response.data)
-        this.routines.push(response.data)
-        this.newRoutine = {}
-      })
-    },
-    routineUpdate: function (currentExercise) {
-      console.log('Updating Exercise...')
-      console.log(currentExercise)
-      axios.patch(`http://localhost:3000/routines/${currentExercise.id}.json`, currentExercise).then(response => {
-        console.log(response.data)
-      })
-        .catch((error) => {
-          this.errors = error.response.data.errors;
-          console.log(this.errors)
-        });
-    },
-    routineDelete: function (currentExercise) {
-      axios.delete(`http://localhost:3000/routines/${currentExercise.id}).json`).then(response => {
-        console.log(`Deleting exercise from routine...`)
-        console.log(response.data)
-        // this.$router.push("/routine") multi page this will work...
-      })
-    }
   },
 };
 </script>
@@ -59,7 +31,8 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
-    <h1><a href="/login">Login!</a> | <a href="/signup">Signup!</a></h1>
+    <h1 v-if="!localStorageCheck()"><a href="/login">Login!</a> | <a href="/signup">Signup!</a></h1>
+    <h1 v-if="localStorageCheck()"><a href="/logout">Logout!</a></h1>
   </div>
 </template>
 

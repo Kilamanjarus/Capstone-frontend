@@ -20,6 +20,7 @@ export default {
       axios.get("http://localhost:3000/exercises.json").then(response => {
         console.log(response.data)
         this.exercises = response.data
+        console.log(localStorage.jwt)
       })
     },
     openOptions: function (exercise) {
