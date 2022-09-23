@@ -11,9 +11,10 @@ export default {
       newRoutine: {},
 
       exercisePageAmount: 10,
-      exercisesPerPage: 20,
-      pageNumber: 0,
-      exercisesOnPage: {}
+      exercisesPerPage: 15,
+      pageNumber: 1,
+      exerciseIndex: 0,
+      exercisesOnPage: []
     };
   },
   created: function () {
@@ -25,14 +26,15 @@ export default {
       axios.get("http://localhost:3000/exercises.json").then(response => {
         console.log(response.data)
         this.exercises = response.data
+        this.updateExercises();
         // if (this.exercises.length / this.exercisesPerPage % 1 > 0) {
         //   this.exercisePageAmount = (this.exercises.length / this.exercisesPerPage + 1) - (this.exercises.length / this.exercisesPerPage % 1)
         // }
         // else {
         //   this.exercisePageAmount = this.exercises.length / this.exercisesPerPage
         // }
-        console.log(this.exercisePageAmount)
-        console.log(localStorage.jwt)
+        // console.log(this.exercisePageAmount)
+        // console.log(localStorage.jwt)
       })
     },
     openOptions: function (exercise) {
@@ -57,20 +59,35 @@ export default {
       })
     },
     setPageNumber: function (page) {
-      this.pageNumber = page - 1
+      this.pageNumber = page
+      this.exerciseIndex = page - 1
       console.log(this.pageNumber)
+      this.updateExercises(page);
       window.scrollTo(0, 0);
     },
     setPrevPageNumber: function (page) {
-      this.pageNumber = this.pageNumber - 1
+      this.pageNumber = this.pageNumber
+      this.exerciseIndex = page - 1
       console.log(this.pageNumber)
+      this.updateExercises(page);
       window.scrollTo(0, 0);
     },
     setNextPageNumber: function (page) {
       console.log(page)
-      this.pageNumber = this.pageNumber + 1
+      this.pageNumber = this.pageNumber
+      this.exerciseIndex = page - 1
       window.scrollTo(0, 0);
+      this.updateExercises(page);
       // console.log(this.pageNumber)
+    },
+    updateExercises: function (page) {
+      console.log("New array is being made...")
+      this.exercisesOnPage = []
+      for (let i = 0; i < this.exercisesPerPage; i++) {
+        this.exercisesOnPage.push(this.exercises[i + (this.exerciseIndex * this.exercisesPerPage)])
+      }
+      // console.log(this.exercises[0])
+      console.log(this.exercisesOnPage)
     },
   },
 };
@@ -79,18 +96,20 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
-    <!-- {{exercises}} -->
-    <p v-for="(exercise, index) in exercises">
-      <!-- <div v-if <img v-bind:src="exercise.gifUrl" /> -->
-    <div v-if="index >= pageNumber*20 && index <= (pageNumber+1)*20">
-
-      <img v-bind:src="exercise.gifUrl" />
-      {{exercise.id}}
-      {{exercise.name}}
-      <br />
-      <button @click="openOptions(exercise)">Add to Workout...</button>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4" v-for="exercise in exercisesOnPage">
+          <div class="card">
+            <div class="card-body">
+              <img class="card-img-top" v-bind:src="exercise.gifUrl" alt="Card image cap">
+              <h5 class="card-title">{{exercise.name}}</h5>
+              <p class="card-text">{{exercise.target}}</p>
+              <button @click="openOptions(exercise)">Add to Workout...</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    </p>
   </div>
 
   <dialog id="routine-details">
@@ -119,20 +138,23 @@ export default {
 
   <nav aria-label="...">
     <ul class="pagination justify-content-center">
-      <li class="page-item disabled" v-if="pageNumber + 1== 1">
+      <!-- Previous button -->
+      <li class="page-item disabled" v-if="pageNumber == 1">
         <a class="page-link" href="#">Previous</a>
       </li>
-      <li class="page-item" v-if="pageNumber + 1!= 1">
-        <a class="page-link" @click="setPrevPageNumber()">Previous</a>
+      <li class="page-item" v-if="pageNumber != 1">
+        <a class="page-link" @click="setPrevPageNumber(page)">Previous</a>
       </li>
+      <!-- Numbered buttons -->
       <li class="page-item" v-for="page in exercisePageAmount" :key="page">
-        <a class="page-link" @click="setPageNumber(page)" v-if="page != pageNumber + 1">{{page}}</a>
-        <a class="page-link active" @click="setPageNumber(page)" v-if="page == pageNumber + 1">{{page}}</a>
+        <a class="page-link" @click="setPageNumber(page)" v-if="page != pageNumber ">{{page}}</a>
+        <a class="page-link active" @click="setPageNumber(page)" v-if="page == pageNumber ">{{page}}</a>
       </li>
-      <li class="page-item" v-if="pageNumber + 1== exercisePageAmount">
-        <a class="page-link disabled" @click="setNextPageNumber(page)">Next</a>
+      <!-- Next Button -->
+      <li class="page-item" v-if="pageNumber == exercisePageAmount">
+        <a class="page-link disabled" href="#">Next</a>
       </li>
-      <li class="page-item" v-if="pageNumber + 1!= exercisePageAmount">
+      <li class=" page-item" v-if="pageNumber != exercisePageAmount">
         <a class="page-link" @click="setNextPageNumber(page)">Next</a>
       </li>
     </ul>
