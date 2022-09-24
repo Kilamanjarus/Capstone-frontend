@@ -92,12 +92,14 @@ export default {
       }
       // console.log(this.exercises[0])
       // console.log(this.exercisesOnPage)
-      if (this.exercises.length / this.exercisesPerPage % 1 > 0) {
-        this.exercisePageAmount = (this.exercises.length / this.exercisesPerPage + 1) - (this.exercises.length / this.exercisesPerPage % 1)
+      console.log(this.exercisePageAmount)
+      if (this.filterExercises().length / this.exercisesPerPage % 1 > 0) {
+        this.exercisePageAmount = (this.filterExercises().length / this.exercisesPerPage + 1) - (this.filterExercises().length / this.exercisesPerPage % 1)
       }
       else {
         this.exercisePageAmount = this.exercises.length / this.exercisesPerPage
       }
+      console.log(this.exercisePageAmount)
       // console.log(this.exercises)
     },
     filterExercises: function () {
