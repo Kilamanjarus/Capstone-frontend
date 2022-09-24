@@ -1,11 +1,13 @@
 <script>
 import axios from "axios";
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default {
   data: function () {
     return {
       message: "Exercise List!",
-      exercises: {},
+      exercises: [],
       added: false,
       currentExercise: {},
       newRoutine: {},
@@ -14,11 +16,14 @@ export default {
       exercisesPerPage: 15,
       pageNumber: 1,
       exerciseIndex: 0,
-      exercisesOnPage: []
+      exercisesOnPage: [],
+
+      searchWords: "",
     };
   },
   created: function () {
     this.exercisesIndex();
+    this.filterExercises();
   },
   methods: {
     exercisesIndex: function () {
@@ -26,7 +31,7 @@ export default {
       axios.get("http://localhost:3000/exercises.json").then(response => {
         console.log(response.data)
         this.exercises = response.data
-        this.updateExercises();
+        this.updateExercisesOnPage();
         if (this.exercises.length / this.exercisesPerPage % 1 > 0) {
           this.exercisePageAmount = (this.exercises.length / this.exercisesPerPage + 1) - (this.exercises.length / this.exercisesPerPage % 1)
         }
@@ -63,14 +68,14 @@ export default {
       this.pageNumber = page
       this.exerciseIndex = page - 1
       console.log(this.pageNumber)
-      this.updateExercises(page);
+      this.updateExercisesOnPage(page);
       window.scrollTo(0, 0);
     },
     setPrevPageNumber: function () {
       this.pageNumber = this.pageNumber - 1
       this.exerciseIndex = this.pageNumber - 1
       console.log(this.pageNumber)
-      this.updateExercises(this.pageNumber);
+      this.updateExercisesOnPage(this.pageNumber);
       window.scrollTo(0, 0);
     },
     setNextPageNumber: function () {
@@ -78,20 +83,32 @@ export default {
       this.pageNumber = this.pageNumber + 1
       this.exerciseIndex = this.pageNumber - 1
       window.scrollTo(0, 0);
-      this.updateExercises(this.pageNumber);
+      this.updateExercisesOnPage(this.pageNumber);
       // console.log(this.pageNumber)
     },
-    updateExercises: function (page) {
+    updateExercisesOnPage: function (page) {
       console.log("New array is being made...")
       console.log(page)
       this.exercisesOnPage = []
       for (let i = 0; i < this.exercisesPerPage; i++) {
-        if (this.exercises[i + (this.exerciseIndex * this.exercisesPerPage)]) {
-          this.exercisesOnPage.push(this.exercises[i + (this.exerciseIndex * this.exercisesPerPage)])
+        if (this.filterExercises()[i + (this.exerciseIndex * this.exercisesPerPage)]) {
+          this.exercisesOnPage.push(this.filterExercises()[i + (this.exerciseIndex * this.exercisesPerPage)])
         }
       }
       // console.log(this.exercises[0])
       console.log(this.exercisesOnPage)
+    },
+    filterExercises: function () {
+      // console.log('Filtering exercises...')
+      return this.exercises.filter(exercise => {
+        return exercise.name.includes(this.searchWords);
+      })
+    },
+    filterMuscles: function (word) {
+      console.log('Filtering Muscles...')
+      return this.exercises.filter(exercise => {
+        return exercise.target.includes(word);
+      })
     },
   },
 };
@@ -100,6 +117,11 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
+
+    <p>Search Here:</p>
+    <input type="text" v-model="searchWords">
+    <button @click="updateExercisesOnPage()">Workout Title Search...</button>
+    <p></p>
     <div class="container">
       <div class="row">
         <div class="col-sm-4" v-for="exercise in exercisesOnPage">

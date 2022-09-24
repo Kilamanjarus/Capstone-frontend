@@ -4,8 +4,6 @@ import router from './router'
 import axios from "axios";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import VueAwesomePaginate from "vue-awesome-paginate";
-// import "vue-awesome-paginate/dist/style.css";
 
 axios.defaults.baseURL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "/";
 
