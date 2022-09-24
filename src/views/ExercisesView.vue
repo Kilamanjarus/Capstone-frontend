@@ -137,7 +137,7 @@ export default {
         <a class="dropdown-item" @click="filterMuscles('delts')">Delts</a>
         <a class="dropdown-item" @click="filterMuscles('forearms')">Forearms</a>
         <a class="dropdown-item" @click="filterMuscles('glutes')">Glutes</a>
-        <a class="dropdown-item" @click="filterMuscles('Hamstrings')">Hamstrings</a>
+        <a class="dropdown-item" @click="filterMuscles('hamstrings')">Hamstrings</a>
         <a class="dropdown-item" @click="filterMuscles('levator scapulae')">Levator Scapulae</a>
         <a class="dropdown-item" @click="filterMuscles('pectorals')">Pectorals</a>
         <a class="dropdown-item" @click="filterMuscles('quads')">Quads</a>
