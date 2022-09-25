@@ -20,6 +20,7 @@ export default {
 
       searchWords: "",
       muscleGroup: "",
+      equipmentArray: [],
     };
   },
   created: function () {
@@ -28,7 +29,7 @@ export default {
   },
   methods: {
     exercisesIndex: function () {
-      console.log(`Retrieving exercises...`)
+      // console.log(`Retrieving exercises...`)
       axios.get("http://localhost:3000/exercises.json").then(response => {
         // console.log(response.data)
         this.exercises = response.data
@@ -92,14 +93,14 @@ export default {
       }
       // console.log(this.exercises[0])
       // console.log(this.exercisesOnPage)
-      console.log(this.exercisePageAmount)
+      // console.log(this.exercisePageAmount)
       if (this.filterExercises().length / this.exercisesPerPage % 1 > 0) {
         this.exercisePageAmount = (this.filterExercises().length / this.exercisesPerPage + 1) - (this.filterExercises().length / this.exercisesPerPage % 1)
       }
       else {
         this.exercisePageAmount = this.exercises.length / this.exercisesPerPage
       }
-      console.log(this.exercisePageAmount)
+      // console.log(this.exercisePageAmount)
       // console.log(this.exercises)
     },
     filterExercises: function () {
@@ -110,9 +111,20 @@ export default {
     },
     filterMuscles: function (word) {
       this.muscleGroup = word
-      console.log(word)
+      // console.log(word)
       this.updateExercisesOnPage();
     },
+    filterWeights: function () {
+      console.log("Weight switch works...")
+      // if (this.equipmentArray.includes("body weight")) {}
+      if (this.equipmentArray.includes("body weight")) {
+        this.equipmentArray.splice("body weight", 1)
+      } else {
+        this.equipmentArray.push("body weight")
+      }
+      console.log(this.equipmentArray)
+      this.updateExercisesOnPage();
+    }
   },
 };
 </script>
@@ -121,8 +133,14 @@ export default {
   <div class="home">
     <h1>{{ message }}</h1>
 
-    <p>Search Here:</p>
+    <div class="$form-check-padding-start:                $form-check-input-width form-switch">
+      <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @change="filterWeights()">
+      <label class="form-check-label" for="flexSwitchCheckDefault">Remove Exercises With Weights?</label>
+    </div>
 
+
+
+    <p>Search Here:</p>
     <span class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
@@ -190,10 +208,6 @@ export default {
       <button>Close</button>
     </form>
   </dialog>
-
-
-
-  <div>Here is where I test new stuff</div>
 
   <nav aria-label="...">
     <ul class="pagination justify-content-center">
