@@ -21,6 +21,7 @@ export default {
       searchWords: "",
       muscleGroup: "",
       equipmentArray: [],
+      equipmentExcercises: []
     };
   },
   created: function () {
@@ -31,7 +32,7 @@ export default {
     exercisesIndex: function () {
       // console.log(`Retrieving exercises...`)
       axios.get("http://localhost:3000/exercises.json").then(response => {
-        // console.log(response.data)
+        console.log(response.data)
         this.exercises = response.data
         this.updateExercisesOnPage();
         // console.log(this.exercisePageAmount)
@@ -83,47 +84,52 @@ export default {
       // console.log(this.pageNumber)
     },
     updateExercisesOnPage: function (page) {
-      // console.log("New array is being made...")
-      // console.log(page)
       this.exercisesOnPage = []
       for (let i = 0; i < this.exercisesPerPage; i++) {
         if (this.filterExercises()[i + (this.exerciseIndex * this.exercisesPerPage)]) {
           this.exercisesOnPage.push(this.filterExercises()[i + (this.exerciseIndex * this.exercisesPerPage)])
         }
       }
-      // console.log(this.exercises[0])
-      // console.log(this.exercisesOnPage)
-      // console.log(this.exercisePageAmount)
       if (this.filterExercises().length / this.exercisesPerPage % 1 > 0) {
         this.exercisePageAmount = (this.filterExercises().length / this.exercisesPerPage + 1) - (this.filterExercises().length / this.exercisesPerPage % 1)
       }
       else {
         this.exercisePageAmount = this.exercises.length / this.exercisesPerPage
       }
-      // console.log(this.exercisePageAmount)
-      // console.log(this.exercises)
     },
     filterExercises: function () {
-      // console.log('Filtering exercises...')
       return this.exercises.filter(exercise => {
-        return exercise.name.includes(this.searchWords) && exercise.target.includes(this.muscleGroup)
+        return exercise.name.includes(this.searchWords) && exercise.style.includes(this.muscleGroup)
       })
     },
     filterMuscles: function (word) {
       this.muscleGroup = word
-      // console.log(word)
       this.updateExercisesOnPage();
     },
-    filterWeights: function () {
+    addBodyWeightToEquipment: function () {
       console.log("Weight switch works...")
       // if (this.equipmentArray.includes("body weight")) {}
-      if (this.equipmentArray.includes("body weight")) {
-        this.equipmentArray.splice("body weight", 1)
+      if (this.equipmentArray.includes("Body Weight")) {
+        this.equipmentArray.splice("Body Weight", 1)
       } else {
-        this.equipmentArray.push("body weight")
+        this.equipmentArray.push("Body Weight")
       }
       console.log(this.equipmentArray)
-      this.updateExercisesOnPage();
+      // this.updateExercisesOnPage(); Doesn't work
+    },
+    filterEquipment: function () {
+      this.equipmentArray.forEach(equipment => {
+        console.log("equipement is next")
+        console.log(equipment)
+
+        this.equipmentExcercises << this.exercises.filter(exercise => {
+          return exercise.style.includes(equipment)
+        })
+      })
+      return this.equipmentExcercises
+    },
+    editRoutine: function () {
+      this.$router.push("/routines")
     }
   },
 };
@@ -134,7 +140,7 @@ export default {
     <h1>{{ message }}</h1>
 
     <div class="$form-check-padding-start:                $form-check-input-width form-switch">
-      <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @change="filterWeights()">
+      <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @change="addBodyWeightToEquipment()">
       <label class="form-check-label" for="flexSwitchCheckDefault">Remove Exercises With Weights?</label>
     </div>
 
@@ -148,25 +154,25 @@ export default {
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" @click="filterMuscles('')">All</a>
-        <a class="dropdown-item" @click="filterMuscles('adductors')">Adductors</a>
-        <a class="dropdown-item" @click="filterMuscles('abductors')">Adductors</a>
-        <a class="dropdown-item" @click="filterMuscles('abs')">Abs</a>
-        <a class="dropdown-item" @click="filterMuscles('biceps')">Biceps</a>
-        <a class="dropdown-item" @click="filterMuscles('calves')">Calves</a>
-        <a class="dropdown-item" @click="filterMuscles('cardiovascular system')">Cardio</a>
-        <a class="dropdown-item" @click="filterMuscles('delts')">Delts</a>
-        <a class="dropdown-item" @click="filterMuscles('forearms')">Forearms</a>
-        <a class="dropdown-item" @click="filterMuscles('glutes')">Glutes</a>
-        <a class="dropdown-item" @click="filterMuscles('hamstrings')">Hamstrings</a>
-        <a class="dropdown-item" @click="filterMuscles('levator scapulae')">Levator Scapulae</a>
-        <a class="dropdown-item" @click="filterMuscles('pectorals')">Pectorals</a>
-        <a class="dropdown-item" @click="filterMuscles('quads')">Quads</a>
-        <a class="dropdown-item" @click="filterMuscles('serratus anterior')">Serratus Anterior</a>
-        <a class="dropdown-item" @click="filterMuscles('spine')">Spine</a>
-        <a class="dropdown-item" @click="filterMuscles('lats')">Lats</a>
-        <a class="dropdown-item" @click="filterMuscles('traps')">Traps</a>
-        <a class="dropdown-item" @click="filterMuscles('triceps')">Triceps</a>
-        <a class="dropdown-item" @click="filterMuscles('upper back')">Upper Back</a>
+        <a class="dropdown-item" @click="filterMuscles('Adductors')">Adductors</a>
+        <a class="dropdown-item" @click="filterMuscles('Abductors')">Adductors</a>
+        <a class="dropdown-item" @click="filterMuscles('Abs')">Abs</a>
+        <a class="dropdown-item" @click="filterMuscles('Biceps')">Biceps</a>
+        <a class="dropdown-item" @click="filterMuscles('Calves')">Calves</a>
+        <a class="dropdown-item" @click="filterMuscles('Cardiovascular System')">Cardio</a>
+        <a class="dropdown-item" @click="filterMuscles('Delts')">Delts</a>
+        <a class="dropdown-item" @click="filterMuscles('Forearms')">Forearms</a>
+        <a class="dropdown-item" @click="filterMuscles('Glutes')">Glutes</a>
+        <a class="dropdown-item" @click="filterMuscles('Hamstrings')">Hamstrings</a>
+        <a class="dropdown-item" @click="filterMuscles('Levator scapulae')">Levator Scapulae</a>
+        <a class="dropdown-item" @click="filterMuscles('Pectorals')">Pectorals</a>
+        <a class="dropdown-item" @click="filterMuscles('Quads')">Quads</a>
+        <a class="dropdown-item" @click="filterMuscles('Serratus anterior')">Serratus Anterior</a>
+        <a class="dropdown-item" @click="filterMuscles('Spine')">Spine</a>
+        <a class="dropdown-item" @click="filterMuscles('Lats')">Lats</a>
+        <a class="dropdown-item" @click="filterMuscles('Traps')">Traps</a>
+        <a class="dropdown-item" @click="filterMuscles('Triceps')">Triceps</a>
+        <a class="dropdown-item" @click="filterMuscles('Upper back')">Upper Back</a>
       </div>
     </span>
 
@@ -180,8 +186,13 @@ export default {
             <div class="card-body">
               <img class="card-img-top" v-bind:src="exercise.gifUrl" alt="Card image cap">
               <h5 class="card-title">{{exercise.name}}</h5>
-              <p class="card-text">{{exercise.target}}</p>
-              <button @click="openOptions(exercise)">Add to Workout...</button>
+              <p class="card-text">{{exercise.style}}</p>
+              <div v-if="exercise.on_routine == false">
+                <button @click="openOptions(exercise)">Add to Workout...</button>
+              </div>
+              <div v-if="exercise.on_routine == true">
+                <button @click="editRoutine()">Edit Routine...</button>
+              </div>
             </div>
           </div>
         </div>
@@ -193,13 +204,13 @@ export default {
     <form method="dialog">
       <h1>Exercise info</h1>
       <p><b>Exercise Name:</b> {{ currentExercise.name }}</p>
-      <p><b>Exercise Target:</b> {{ currentExercise.target }}</p>
-      <p><b>Exercise Muscle Grouping:</b> {{ currentExercise.bodyPart }}</p>
+      <p><b>Exercise Target:</b> {{ currentExercise.style }}</p>
+      <p><b>Exercise Muscle Grouping:</b> {{ currentExercise.muscle }}</p>
       <p><b>Exercise Equipment:</b> {{ currentExercise.equipment }}</p>
       <p>To create a Routine for your Workout, please enter the information needed below...</p>
       <p><b>Sets: </b><input type="text" v-model="newRoutine.sets"></p>
       <p><b>Reps: </b><input type="text" v-model="newRoutine.reps"></p>
-      <p v-if="currentExercise.equipment==`body weight` || currentExercise.equipment==`assisted`">
+      <p v-if="currentExercise.equipment==`Body Weight` || currentExercise.equipment==`Assisted`">
       </p>
       <p v-else>
         <b>Added Weight: </b><input type="text" v-model="newRoutine.added_weight">

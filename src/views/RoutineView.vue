@@ -37,6 +37,7 @@ export default {
       axios.delete(`http://localhost:3000/routines/${currentExercise.id}).json`).then(response => {
         console.log(`Deleting exercise from routine...`)
         console.log(response.data)
+        this.routines.splice(`${currentExercise}`, 1)
       })
     },
     workoutCreate: function () {
