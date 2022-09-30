@@ -115,14 +115,11 @@ export default {
       if (equipment.owner) {
         axios.delete(`http://localhost:3000/userequipment/${equipment.id}`).then(response => {
           this.equipmentIndex();
-          this.filterExercises();
         })
       } else {
         axios.post(`http://localhost:3000/userequipment`, this.params).then(response => {
           this.equipmentIndex();
-          this.filterExercises();
         })
-
       }
     },
     filterEquipment: function () {
@@ -139,6 +136,9 @@ export default {
     toggleEquipment: function () {
       this.editEquipment = !this.editEquipment
     },
+    reloadPage: function () {
+      window.location.reload();
+    }
   },
 };
 </script>
@@ -157,11 +157,13 @@ export default {
             @change="toggleEquipmentOwner(equipment)" v-if="!equipment.owner">
           <label class="form-check-label" for="flexSwitchCheckChecked"><b>{{equipment.name}}</b></label>
         </div>
+
         <p></p>
       </div>
+      <button @click="reloadPage">Update Search Settings...</button>
+      <p></p>
     </div>
 
-    <p>Search Here:</p>
     <span class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
