@@ -146,6 +146,7 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
+    <!-- Equipment Search W/ Edit Button -->
     <button @click="toggleEquipment()">Edit Your Equipment...</button>
     <p></p>
     <div v-if="this.editEquipment == true">
@@ -163,7 +164,7 @@ export default {
       <button @click="reloadPage">Update Search Settings...</button>
       <p></p>
     </div>
-
+    <!-- Muscle Group Search -->
     <span class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
@@ -192,10 +193,11 @@ export default {
         <a class="dropdown-item" @click="filterMuscles('Upper back')">Upper Back</a>
       </div>
     </span>
-
+    <!-- Title Word Search -->
     <input type="text" v-model="searchWords" @change="updateExercisesOnPage()" placeholder="Exercise Title...">
     <button @click="updateExercisesOnPage()">Workout Title Search...</button>
     <p></p>
+    <!-- Cards for Exercises -->
     <div class="container">
       <div class="row">
         <div class="col-sm-4" v-for="exercise in exercisesOnPage">
@@ -216,7 +218,7 @@ export default {
       </div>
     </div>
   </div>
-
+  <!-- Modal for Exercise Add to Workout -->
   <dialog id="routine-details">
     <form method="dialog">
       <h1>Exercise info</h1>
@@ -237,6 +239,7 @@ export default {
     </form>
   </dialog>
 
+  <!-- Pagination -->
   <nav aria-label="...">
     <ul class="pagination justify-content-center">
       <!-- Previous button -->

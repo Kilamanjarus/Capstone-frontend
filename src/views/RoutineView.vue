@@ -78,13 +78,34 @@ export default {
         </p>
       </div>
     </div>
-    <div v-for="currentExercise in routines">
-      <div v-if="currentExercise.status === `added` && editMode === false">
-        <b>{{ currentExercise.exercise.name }}</b>
-        <p><b>Exercise ID: </b>{{currentExercise.exercise_id}}</p>
-        <p><b>Weight: </b>{{currentExercise.added_weight}}</p>
-        <p><b>Sets: </b>{{currentExercise.sets}}</p>
-        <p><b>Reps: </b>{{currentExercise.reps}}</p>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6" v-for="currentExercise in routines">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">{{currentExercise.exercise.name}}</h3>
+              <h4 class="card-text"><b>{{currentExercise.exercise.style}}</b></h4>
+              <img class="card-img-top" v-bind:src="currentExercise.exercise.gifUrl" alt="Card image cap">
+              <p class="card-text" v-if="currentExercise.added_weight != nil && editMode == false"><b>Added
+                  Weight: </b>{{currentExercise.added_weight}}</p>
+              <p class="card-text" v-if="currentExercise.added_weight != nil && editMode == true"><b>Added Weight:
+                </b>
+                <input type="text" v-model="currentExercise.added_weight">
+              </p>
+              <p class="card-text" v-if="currentExercise.sets != nil && editMode == false"><b>Sets:
+                </b>{{currentExercise.sets}}</p>
+              <p class="card-text" v-if="currentExercise.sets != nil && editMode == true"><b>Sets: </b>
+                <input type="text" v-model="currentExercise.sets">
+              </p>
+              <p class="card-text" v-if="currentExercise.reps != nil && editMode == false"><b>Reps:
+                </b>{{currentExercise.reps}}</p>
+              <p class="card-text" v-if="currentExercise.reps != nil && editMode == true"><b>Reps: </b>
+                <input type="text" v-model="currentExercise.reps">
+              </p>
+              <button @click="routineUpdate(currentExercise)" v-if="editMode == true">Update Exorcise</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
