@@ -20,23 +20,27 @@ export default {
 
       searchWords: "",
       muscleGroup: "",
-      equipmentArray: [],
+      params: {},
+      editEquipment: false,
+      equipments: [],
       equipmentExcercises: []
     };
   },
   created: function () {
     this.exercisesIndex();
+    this.equipmentIndex();
     this.filterExercises();
   },
   methods: {
     exercisesIndex: function () {
-      // console.log(`Retrieving exercises...`)
       axios.get("http://localhost:3000/exercises.json").then(response => {
-        console.log(response.data)
         this.exercises = response.data
         this.updateExercisesOnPage();
-        // console.log(this.exercisePageAmount)
-        // console.log(localStorage.jwt)
+      })
+    },
+    equipmentIndex: function () {
+      axios.get("http://localhost:3000/equipment.json").then(response => {
+        this.equipments = response.data
       })
     },
     openOptions: function (exercise) {
@@ -99,29 +103,30 @@ export default {
     },
     filterExercises: function () {
       return this.exercises.filter(exercise => {
-        return exercise.name.includes(this.searchWords) && exercise.style.includes(this.muscleGroup)
+        return exercise.name.toLowerCase().includes(this.searchWords.toLowerCase()) && exercise.style.includes(this.muscleGroup) && exercise.own_equipment == true
       })
     },
     filterMuscles: function (word) {
       this.muscleGroup = word
       this.updateExercisesOnPage();
     },
-    addBodyWeightToEquipment: function () {
-      console.log("Weight switch works...")
-      // if (this.equipmentArray.includes("body weight")) {}
-      if (this.equipmentArray.includes("Body Weight")) {
-        this.equipmentArray.splice("Body Weight", 1)
+    toggleEquipmentOwner: function (equipment) {
+      this.params.id = equipment.id
+      if (equipment.owner) {
+        axios.delete(`http://localhost:3000/userequipment/${equipment.id}`).then(response => {
+          this.equipmentIndex();
+          this.filterExercises();
+        })
       } else {
-        this.equipmentArray.push("Body Weight")
+        axios.post(`http://localhost:3000/userequipment`, this.params).then(response => {
+          this.equipmentIndex();
+          this.filterExercises();
+        })
+
       }
-      console.log(this.equipmentArray)
-      // this.updateExercisesOnPage(); Doesn't work
     },
     filterEquipment: function () {
       this.equipmentArray.forEach(equipment => {
-        console.log("equipement is next")
-        console.log(equipment)
-
         this.equipmentExcercises << this.exercises.filter(exercise => {
           return exercise.style.includes(equipment)
         })
@@ -130,7 +135,10 @@ export default {
     },
     editRoutine: function () {
       this.$router.push("/routines")
-    }
+    },
+    toggleEquipment: function () {
+      this.editEquipment = !this.editEquipment
+    },
   },
 };
 </script>
@@ -138,13 +146,20 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
-
-    <div class="$form-check-padding-start:                $form-check-input-width form-switch">
-      <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @change="addBodyWeightToEquipment()">
-      <label class="form-check-label" for="flexSwitchCheckDefault">Remove Exercises With Weights?</label>
+    <button @click="toggleEquipment()">Edit Your Equipment...</button>
+    <p></p>
+    <div v-if="this.editEquipment == true">
+      <div v-for="arrays in equipments">
+        <div class="form-switch form-check-inline" v-for="equipment in arrays">
+          <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+            @change="toggleEquipmentOwner(equipment)" checked v-if="equipment.owner">
+          <input class="form-check-input" type="checkbox" id="flexSwitchCheckdefault"
+            @change="toggleEquipmentOwner(equipment)" v-if="!equipment.owner">
+          <label class="form-check-label" for="flexSwitchCheckChecked"><b>{{equipment.name}}</b></label>
+        </div>
+        <p></p>
+      </div>
     </div>
-
-
 
     <p>Search Here:</p>
     <span class="dropdown">
@@ -176,7 +191,7 @@ export default {
       </div>
     </span>
 
-    <input type="text" v-model="searchWords">
+    <input type="text" v-model="searchWords" @change="updateExercisesOnPage()" placeholder="Exercise Title...">
     <button @click="updateExercisesOnPage()">Workout Title Search...</button>
     <p></p>
     <div class="container">
@@ -260,5 +275,7 @@ export default {
 </template>
 
 <style>
-
+.form-check-label {
+  width: 180px;
+}
 </style>
