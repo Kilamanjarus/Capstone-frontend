@@ -60,48 +60,44 @@ export default {
   <div class="home">
     <h1>{{ message }}</h1>
   </div>
-  <p><b>Edit Mode: </b> <button @click="toggleEdit()">Test</button></p>
+  <p v-if="this.editMode == false"><button @click="toggleEdit()">Edit Mode</button></p>
+  <p v-if="this.editMode == true"><button @click="toggleEdit()">Leave Edit Mode</button></p>
   <p>Current Routines:</p>
   <div>
+    <!-- Cards for Routines -->
     <div v-for="currentExercise in routines">
-      <div v-if="currentExercise.status === `added` && editMode === true">
-        {{ currentExercise.id }}
-        {{ currentExercise.exercise.name }}
-        <button @click="routineDelete(currentExercise)">Delete Exercise</button>
-        <p>Exercise ID: <input type="text" v-model="currentExercise.exercise_id"></p>
-        <p>Weight: <input type="text" v-model="currentExercise.added_weight"></p>
-        <p>Sets: <input type="text" v-model="currentExercise.sets"></p>
-        <p>Reps: <input type="text" v-model="currentExercise.reps"></p>
-        <button @click="routineUpdate(currentExercise)">Update Exorcise</button>
-        <p>
-          <br />
-        </p>
-      </div>
-    </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-6" v-for="currentExercise in routines">
-          <div class="card">
+      <div class="card mb-3" v-if="currentExercise.status === 'added'">
+        <div class="row no-gutters">
+          <!-- Picture -->
+          <div class="col-md-5">
+            <img class="card-img" v-bind:src="currentExercise.exercise.gifUrl" alt="...">
+          </div>
+          <!-- Info -->
+          <div class="col-md-7 my-auto">
             <div class="card-body">
               <h3 class="card-title">{{currentExercise.exercise.name}}</h3>
-              <h4 class="card-text"><b>{{currentExercise.exercise.style}}</b></h4>
-              <img class="card-img-top" v-bind:src="currentExercise.exercise.gifUrl" alt="Card image cap">
-              <p class="card-text" v-if="currentExercise.added_weight != nil && editMode == false"><b>Added
-                  Weight: </b>{{currentExercise.added_weight}}</p>
-              <p class="card-text" v-if="currentExercise.added_weight != nil && editMode == true"><b>Added Weight:
+              <h5 class="card-text"><b>{{currentExercise.exercise.style}}</b></h5>
+              <h4 class="card-text"><b>Equipment: </b>{{currentExercise.exercise.equipment}}</h4>
+              <!-- Weight -->
+              <h4 class="card-text" v-if="currentExercise.added_weight != nil && editMode == false"><b>Added
+                  Weight: </b>{{currentExercise.added_weight}}</h4>
+              <h4 class="card-text" v-if="currentExercise.added_weight != nil && editMode == true"><b>Added Weight:
                 </b>
                 <input type="text" v-model="currentExercise.added_weight">
-              </p>
-              <p class="card-text" v-if="currentExercise.sets != nil && editMode == false"><b>Sets:
-                </b>{{currentExercise.sets}}</p>
-              <p class="card-text" v-if="currentExercise.sets != nil && editMode == true"><b>Sets: </b>
+              </h4>
+              <!-- Sets -->
+              <h4 class="card-text" v-if="currentExercise.sets != nil && editMode == false"><b>Sets:
+                </b>{{currentExercise.sets}}</h4>
+              <h4 class="card-text" v-if="currentExercise.sets != nil && editMode == true"><b>Sets: </b>
                 <input type="text" v-model="currentExercise.sets">
-              </p>
-              <p class="card-text" v-if="currentExercise.reps != nil && editMode == false"><b>Reps:
-                </b>{{currentExercise.reps}}</p>
-              <p class="card-text" v-if="currentExercise.reps != nil && editMode == true"><b>Reps: </b>
+              </h4>
+              <!-- Reps -->
+              <h4 class="card-text" v-if="currentExercise.reps != nil && editMode == false"><b>Reps:
+                </b>{{currentExercise.reps}}</h4>
+              <h4 class="card-text" v-if="currentExercise.reps != nil && editMode == true"><b>Reps: </b>
                 <input type="text" v-model="currentExercise.reps">
-              </p>
+              </h4>
+              <!-- Update Button -->
               <button @click="routineUpdate(currentExercise)" v-if="editMode == true">Update Exorcise</button>
             </div>
           </div>
@@ -109,6 +105,8 @@ export default {
       </div>
     </div>
   </div>
+
+  <!-- Workout Create -->
   <b>Workout Title: </b><input type="text" v-model="newWorkout.title"> <button @click="workoutCreate">Create
     Workout</button>
 </template>

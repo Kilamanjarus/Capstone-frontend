@@ -54,15 +54,15 @@ export default {
       console.log(`Creating new routine....`)
       // console.log(exercise)
       this.newRoutine.exercise_id = exercise.id
-      if (exercise.equipment == "body weight" || exercise.equipment == "assisted") {
+      if (exercise.equipment == "Body Weight" || exercise.equipment == "Assisted" || exercise.equipment == "Wheeler Roller" || exercise.equipment == "Stability Ball") {
         this.newRoutine.added_weight = 0
       }
       console.log(this.newRoutine)
       axios.post("http://localhost:3000/routines.json", this.newRoutine).then(response => {
         console.log(response.data)
-        this.routines.push(response.data)
         this.newRoutine = {}
       })
+      this.reloadPage();
     },
     setPageNumber: function (page) {
       console.log(page)
@@ -95,10 +95,10 @@ export default {
         }
       }
       if (this.filterExercises().length / this.exercisesPerPage % 1 > 0) {
-        this.exercisePageAmount = (this.filterExercises().length / this.exercisesPerPage + 1) - (this.filterExercises().length / this.exercisesPerPage % 1)
+        this.exercisePageAmount = Math.ceil(this.filterExercises().length / this.exercisesPerPage)
       }
       else {
-        this.exercisePageAmount = this.exercises.length / this.exercisesPerPage
+        this.exercisePageAmount = Math.ceil(this.filterExercises().length / this.exercisesPerPage)
       }
     },
     filterExercises: function () {
@@ -229,10 +229,10 @@ export default {
       <p>To create a Routine for your Workout, please enter the information needed below...</p>
       <p><b>Sets: </b><input type="text" v-model="newRoutine.sets"></p>
       <p><b>Reps: </b><input type="text" v-model="newRoutine.reps"></p>
-      <p v-if="currentExercise.equipment==`Body Weight` || currentExercise.equipment==`Assisted`">
+      <p
+        v-if="currentExercise.equipment==`Body Weight` || currentExercise.equipment==`Assisted` || currentExercise.equipment==`Wheel Roller` || currentExercise.equipment == `Stability Ball`">
       </p>
-      <p v-else>
-        <b>Added Weight: </b><input type="text" v-model="newRoutine.added_weight">
+      <p v-else><b>Added Weight: </b><input type=" text" v-model="newRoutine.added_weight">
       </p>
       <button @click="routineCreate(currentExercise)">Create Routine...</button>
       <button>Close</button>
