@@ -36,15 +36,19 @@ export default {
     <a v-bind:href="`/workouts/${workout.id}`"> {{ workout.title }}</a>
   </div>
   <br />
+
+
+  <!-- Carousel -->
+  {{workout.routines.length}}
+
+
   <!-- {{workout}} -->
-  {{workout.routines}}
-  <div v-for="exercise in workout.exercises">
-    {{ exercise.name }}
-  </div>
-  <p></p>
+
   </p>
 </template>
 
 <style>
-
+body {
+  background: silver;
+}
 </style>

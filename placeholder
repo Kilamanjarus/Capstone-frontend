@@ -26,3 +26,10 @@
       <li class="page-item">
         <a class="page-link" href="#">Next</a>
       </li>
+
+
+      {{workout.routines}}
+      <div v-for="exercise in workout.exercises">
+        {{ exercise.name }}
+      </div>
+      <p></p>

@@ -69,7 +69,7 @@ export default {
       <div class="card mb-3" v-if="currentExercise.status === 'added'">
         <div class="row no-gutters">
           <!-- Picture -->
-          <div class="col-md-5">
+          <div class="col-md-3">
             <img class="card-img" v-bind:src="currentExercise.exercise.gifUrl" alt="...">
           </div>
           <!-- Info -->

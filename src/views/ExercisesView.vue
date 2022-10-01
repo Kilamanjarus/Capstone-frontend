@@ -59,7 +59,7 @@ export default {
       }
       console.log(this.newRoutine)
       axios.post("http://localhost:3000/routines.json", this.newRoutine).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.newRoutine = {}
       })
       this.reloadPage();
@@ -238,6 +238,8 @@ export default {
       <button>Close</button>
     </form>
   </dialog>
+
+  <p v-if="filterExercises()==nil">Test</p>
 
   <!-- Pagination -->
   <nav aria-label="...">

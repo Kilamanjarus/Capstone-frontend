@@ -26,22 +26,62 @@ export default {
 
 <template>
   <div class="home">
-    <h1>{{ message }}</h1>
-    <a v-bind:href="`/workouts/${this.$route.params.id}/edit`">Edit</a>
+    <h1>{{workout.title}}</h1>
+    <a v-bind:href="`/workouts/${this.$route.params.id}/edit`" v-if="workout.owner">Edit</a>
   </div>
-  <p><b>Title: </b>{{workout.title}}</p>
-  <!-- <p><b>Routines: </b>{{workout.routines}}</p> -->
-  <div v-for="routine in workout.routines">
-    <b> --- </b>
-    <p><b>Exercise Name: </b>{{routine.exercise.name}}</p>
-    <p><b>Exercise Style: </b>{{routine.exercise.style}}</p>
-    <p><b>Exercise Muscle: </b>{{routine.exercise.muscle}}</p>
-    <p><b>Weight: </b>{{routine.added_weight}} lbs</p>
-    <p><b>{{routine.sets}} Sets by {{routine.reps}} Reps!</b></p>
+  <!-- c\Carousel -->
+  <div id="carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+    <div class="carousel-inner" v-for="routine in workout.routines">
+      <!-- First Active Panel -->
+      <div class="carousel-item active" v-if="routine == workout.routines[0]">
+
+        <img v-bind:src="routine.exercise.gifUrl" class="d-block w-100" alt="">
+
+        <div class="carousel-caption d-none d-md-block">
+          <h5>{{routine.exercise.name}}</h5>
+          <p v-if="routine.added_weight == null">{{routine.sets}} Sets of {{routine.reps}}</p>
+          <p v-if="routine.added_weight != null">{{routine.sets}} Sets of {{routine.reps}} with a weight
+            of{{routine.added_weight}}</p>
+        </div>
+      </div>
+      <!-- If Generation Panels -->
+      <div class="carousel-item" v-if="routine != workout.routines[0]">
+
+        <img v-bind:src="routine.exercise.gifUrl" class="d-block w-100" alt="">
+
+        <div class="carousel-caption d-none d-md-block ">
+          <h5>{{routine.exercise.name}}</h5>
+          <p v-if="routine.added_weight == null">{{routine.sets}} Sets of {{routine.reps}}</p>
+          <p v-if="routine.added_weight != null">{{routine.sets}} Sets of {{routine.reps}} with a weight
+            of{{routine.added_weight}}</p>
+        </div>
+      </div>
+    </div>
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="false"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="false"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
-  <br />
+
 </template>
 
 <style>
+.carousel {
+  height: 500px;
+  width: 500px;
+  margin: auto;
+}
 
+.carousel-caption {
+  margin-bottom: -50px;
+}
+
+body {
+  margin-bottom: 50px;
+}
 </style>
