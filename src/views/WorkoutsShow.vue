@@ -30,30 +30,17 @@ export default {
     <a v-bind:href="`/workouts/${this.$route.params.id}/edit`" v-if="workout.owner">Edit</a>
   </div>
   <!-- c\Carousel -->
-  <div id="carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
-    <div class="carousel-inner" v-for="routine in workout.routines">
+  <div id="carousel" class="carousel carousel-dark carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-inner" v-for="(routine, idx) in workout.routines">
       <!-- First Active Panel -->
-      <div class="carousel-item active" v-if="routine == workout.routines[0]">
-
+      <div class="carousel-item" :class="{ active: idx==0 }">
         <img v-bind:src="routine.exercise.gifUrl" class="d-block w-100" alt="">
-
         <div class="carousel-caption d-none d-md-block">
-          <h5>{{routine.exercise.name}}</h5>
-          <p v-if="routine.added_weight == null">{{routine.sets}} Sets of {{routine.reps}}</p>
-          <p v-if="routine.added_weight != null">{{routine.sets}} Sets of {{routine.reps}} with a weight
-            of{{routine.added_weight}}</p>
-        </div>
-      </div>
-      <!-- If Generation Panels -->
-      <div class="carousel-item" v-if="routine != workout.routines[0]">
-
-        <img v-bind:src="routine.exercise.gifUrl" class="d-block w-100" alt="">
-
-        <div class="carousel-caption d-none d-md-block ">
-          <h5>{{routine.exercise.name}}</h5>
-          <p v-if="routine.added_weight == null">{{routine.sets}} Sets of {{routine.reps}}</p>
-          <p v-if="routine.added_weight != null">{{routine.sets}} Sets of {{routine.reps}} with a weight
-            of{{routine.added_weight}}</p>
+          <h2 class="exercise-name">{{routine.exercise.name}}</h2>
+          <div>Exercise number {{idx + 1}}</div>
+          <div v-if="routine.added_weight == null">{{routine.sets}} Sets of {{routine.reps}}</div>
+          <div v-if="routine.added_weight != null">{{routine.sets}} Sets of {{routine.reps}} with a weight
+            of{{routine.added_weight}}</div>
         </div>
       </div>
     </div>
@@ -78,7 +65,11 @@ export default {
 }
 
 .carousel-caption {
-  margin-bottom: -50px;
+  margin-bottom: -45px;
+}
+
+.exercise-name {
+  margin-bottom: 420px;
 }
 
 body {

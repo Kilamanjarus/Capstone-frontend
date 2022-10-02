@@ -62,7 +62,7 @@ export default {
         // console.log(response.data)
         this.newRoutine = {}
       })
-      this.reloadPage();
+      exercise.on_routine = true;
     },
     setPageNumber: function (page) {
       console.log(page)
@@ -284,5 +284,9 @@ export default {
 <style>
 .form-check-label {
   width: 180px;
+}
+
+.card {
+  height: 100%;
 }
 </style>

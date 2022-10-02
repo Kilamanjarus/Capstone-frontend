@@ -5,10 +5,11 @@ import axios from "axios";
 export default {
   data: function () {
     return {
-      message: "Welcome to Vue.js!",
+      message: "Welcome to your current routines! Here you can edit them, delete them, or if you like your workout give it a title and publish it!",
       routines: {},
       newWorkout: {},
       editMode: false,
+      error: "",
     };
   },
   created: function () {
@@ -86,15 +87,15 @@ export default {
                 <input type="text" v-model="currentExercise.added_weight">
               </h4>
               <!-- Sets -->
-              <h4 class="card-text" v-if="currentExercise.sets != nil && editMode == false"><b>Sets:
+              <h4 class="card-text" v-if="editMode == false"><b>Sets:
                 </b>{{currentExercise.sets}}</h4>
-              <h4 class="card-text" v-if="currentExercise.sets != nil && editMode == true"><b>Sets: </b>
+              <h4 class="card-text" v-if="editMode == true"><b>Sets: </b>
                 <input type="text" v-model="currentExercise.sets">
               </h4>
               <!-- Reps -->
-              <h4 class="card-text" v-if="currentExercise.reps != nil && editMode == false"><b>Reps:
+              <h4 class="card-text" v-if="editMode == false"><b>Reps:
                 </b>{{currentExercise.reps}}</h4>
-              <h4 class="card-text" v-if="currentExercise.reps != nil && editMode == true"><b>Reps: </b>
+              <h4 class="card-text" v-if="editMode == true"><b>Reps: </b>
                 <input type="text" v-model="currentExercise.reps">
               </h4>
               <!-- Update Button -->
