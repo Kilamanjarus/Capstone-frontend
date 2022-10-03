@@ -59,7 +59,7 @@ export default {
         <label>Password confirmation:</label>
         <input type="password" v-model="newUserParams.password_confirmation" />
       </div>
-      <input type="submit" value="Submit" />
+      <input class="btn btn-primary" type="submit" value="Submit" />
     </form>
   </div>
 </template>

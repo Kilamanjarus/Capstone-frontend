@@ -23,7 +23,9 @@ export default {
       params: {},
       editEquipment: false,
       equipments: [],
-      equipmentExcercises: []
+      equipmentExcercises: [],
+
+      error: "",
     };
   },
   created: function () {
@@ -36,6 +38,8 @@ export default {
       axios.get("http://localhost:3000/exercises.json").then(response => {
         this.exercises = response.data
         this.updateExercisesOnPage();
+      }).catch(error => {
+        this.error = error.data
       })
     },
     equipmentIndex: function () {
@@ -44,20 +48,20 @@ export default {
       })
     },
     openOptions: function (exercise) {
-      console.log(`Opening up options to add a routine...`)
+      // console.log(`Opening up options to add a routine...`)
       // console.log(exercise)
       this.newRoutine = {}
       this.currentExercise = exercise
       document.querySelector('#routine-details').showModal();
     },
     routineCreate: function (exercise) {
-      console.log(`Creating new routine....`)
+      // console.log(`Creating new routine....`)
       // console.log(exercise)
       this.newRoutine.exercise_id = exercise.id
       if (exercise.equipment == "Body Weight" || exercise.equipment == "Assisted" || exercise.equipment == "Wheeler Roller" || exercise.equipment == "Stability Ball") {
         this.newRoutine.added_weight = 0
       }
-      console.log(this.newRoutine)
+      // console.log(this.newRoutine)
       axios.post("http://localhost:3000/routines.json", this.newRoutine).then(response => {
         // console.log(response.data)
         this.newRoutine = {}
@@ -65,7 +69,7 @@ export default {
       exercise.on_routine = true;
     },
     setPageNumber: function (page) {
-      console.log(page)
+      // console.log(page)
       this.pageNumber = page
       this.exerciseIndex = page - 1
       // console.log(this.pageNumber)
@@ -89,6 +93,7 @@ export default {
     },
     updateExercisesOnPage: function (page) {
       this.exercisesOnPage = []
+      this.error = ""
       for (let i = 0; i < this.exercisesPerPage; i++) {
         if (this.filterExercises()[i + (this.exerciseIndex * this.exercisesPerPage)]) {
           this.exercisesOnPage.push(this.filterExercises()[i + (this.exerciseIndex * this.exercisesPerPage)])
@@ -99,6 +104,9 @@ export default {
       }
       else {
         this.exercisePageAmount = Math.ceil(this.filterExercises().length / this.exercisesPerPage)
+      }
+      if (this.filterExercises().length == 0) {
+        this.error = "ERR_BAD_RESPONSE"
       }
     },
     filterExercises: function () {
@@ -147,7 +155,7 @@ export default {
   <div class="home">
     <h1>{{ message }}</h1>
     <!-- Equipment Search W/ Edit Button -->
-    <button @click="toggleEquipment()">Edit Your Equipment...</button>
+    <button class="btn btn-primary" @click="toggleEquipment()">Edit Your Equipment...</button>
     <p></p>
     <div v-if="this.editEquipment == true">
       <div v-for="arrays in equipments">
@@ -161,15 +169,16 @@ export default {
 
         <p></p>
       </div>
-      <button @click="reloadPage">Update Search Settings...</button>
+      <button class="btn btn-primary" @click="reloadPage">Update Search Settings...</button>
       <p></p>
     </div>
     <!-- Muscle Group Search -->
-    <span class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        Muscle Group
-      </button>
+    <span class="btn-group">
+      <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary dropdown-toggle"
+          type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Muscle Group
+        </button></span>
+      <!-- Dropdown Menu Options -->
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" @click="filterMuscles('')">All</a>
         <a class="dropdown-item" @click="filterMuscles('Adductors')">Adductors</a>
@@ -195,24 +204,35 @@ export default {
     </span>
     <!-- Title Word Search -->
     <input type="text" v-model="searchWords" @change="updateExercisesOnPage()" placeholder="Exercise Title...">
-    <button @click="updateExercisesOnPage()">Workout Title Search...</button>
+    <button class="btn btn-primary" @click="updateExercisesOnPage()">Workout Title Search...</button>
     <p></p>
+
+
+    <h1 v-if="this.error == `ERR_BAD_RESPONSE`">Exercise does not exist, check search paramters and try again.</h1>
+
+
     <!-- Cards for Exercises -->
     <div class="container">
-      <div class="row">
-        <div class="col-sm-4" v-for="exercise in exercisesOnPage">
-          <div class="card">
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" v-for="exercise in exercisesOnPage">
+          <div class="card h-100">
+            <img class="card-img-top" v-bind:src="exercise.gifUrl" alt="Card image cap">
             <div class="card-body">
-              <img class="card-img-top" v-bind:src="exercise.gifUrl" alt="Card image cap">
               <h5 class="card-title">{{exercise.name}}</h5>
               <p class="card-text">{{exercise.style}}</p>
-              <div v-if="exercise.on_routine == false">
-                <button @click="openOptions(exercise)">Add to Workout...</button>
-              </div>
-              <div v-if="exercise.on_routine == true">
-                <button @click="editRoutine()">Edit Routine...</button>
-              </div>
             </div>
+            <!-- Footer For buttons -->
+            <p class="card-footer">
+            <div v-if="exercise.on_routine == false">
+              <button class="btn btn-primary mt-auto align-self-bottom" @click="openOptions(exercise)">Add
+                to
+                Workout...</button>
+            </div>
+            <div v-if="exercise.on_routine == true">
+              <button class="btn btn-primary mt-auto align-self-bottom" @click="editRoutine()">Edit
+                Routine...</button>
+            </div>
+            </p>
           </div>
         </div>
       </div>
@@ -284,9 +304,5 @@ export default {
 <style>
 .form-check-label {
   width: 180px;
-}
-
-.card {
-  height: 100%;
 }
 </style>

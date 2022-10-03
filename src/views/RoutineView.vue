@@ -6,7 +6,7 @@ export default {
   data: function () {
     return {
       message: "Welcome to your current routines! Here you can edit them, delete them, or if you like your workout give it a title and publish it!",
-      routines: {},
+      routines: [],
       newWorkout: {},
       editMode: false,
       error: "",
@@ -17,40 +17,43 @@ export default {
   },
   methods: {
     routineIndex: function () {
-      console.log("Pulling all Exercises added to workouts...")
+      // console.log("Pulling all Exercises added to workouts...")
       axios.get("http://localhost:3000/routines.json").then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.routines = response.data
       })
     },
     routineUpdate: function (currentExercise) {
-      console.log('Updating Exercise...')
-      console.log(currentExercise)
+      // console.log('Updating Exercise...')
+      // console.log(currentExercise)
       axios.patch(`http://localhost:3000/routines/${currentExercise.id}.json`, currentExercise).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
+        location.reload();
       })
         .catch((error) => {
           this.errors = error.response.data.errors;
-          console.log(this.errors)
+          // console.log(this.errors)
         });
     },
     routineDelete: function (currentExercise) {
-      axios.delete(`http://localhost:3000/routines/${currentExercise.id}).json`).then(response => {
-        console.log(`Deleting exercise from routine...`)
-        console.log(response.data)
-        this.routines.splice(`${currentExercise}`, 1)
-      })
+      if (confirm('Are you sure? Permanently delete routine from your workout?')) {
+        axios.delete(`http://localhost:3000/routines/${currentExercise.id}).json`).then(response => {
+          // console.log(`Deleting exercise from routine...`)
+          // console.log(response.data)
+          location.reload();
+        })
+      }
     },
     workoutCreate: function () {
-      console.log(`Creating new workout...`)
-      console.log(this.newWorkout)
+      // console.log(`Creating new workout...`)
+      // console.log(this.newWorkout)
       axios.post(`http://localhost:3000/workouts.json`, this.newWorkout).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.$router.push("/workouts")
       })
     },
     toggleEdit: function () {
-      console.log(this.editMode)
+      // console.log(this.editMode)
       this.editMode = !this.editMode
     },
   },
@@ -61,8 +64,8 @@ export default {
   <div class="home">
     <h1>{{ message }}</h1>
   </div>
-  <p v-if="this.editMode == false"><button @click="toggleEdit()">Edit Mode</button></p>
-  <p v-if="this.editMode == true"><button @click="toggleEdit()">Leave Edit Mode</button></p>
+  <p v-if="this.editMode == false"><button class="btn btn-primary" @click="toggleEdit()">Edit Mode</button></p>
+  <p v-if="this.editMode == true"><button class="btn btn-primary" @click="toggleEdit()">Leave Edit Mode</button></p>
   <p>Current Routines:</p>
   <div>
     <!-- Cards for Routines -->
@@ -99,7 +102,11 @@ export default {
                 <input type="text" v-model="currentExercise.reps">
               </h4>
               <!-- Update Button -->
-              <button @click="routineUpdate(currentExercise)" v-if="editMode == true">Update Exorcise</button>
+              <button class="btn btn-primary" @click="routineUpdate(currentExercise)" v-if="editMode == true">Update
+                Exorcise</button>
+              <span v-if="editMode == true"> | </span>
+              <button class="btn btn-danger" @click="routineDelete(currentExercise)" v-if="editMode == true">Delete
+                Exorcise</button>
             </div>
           </div>
         </div>
@@ -108,8 +115,12 @@ export default {
   </div>
 
   <!-- Workout Create -->
-  <b>Workout Title: </b><input type="text" v-model="newWorkout.title"> <button @click="workoutCreate">Create
-    Workout</button>
+  <span>
+    <h3><b>Workout Title: </b></h3>
+    <p><input type="text" v-model="newWorkout.title"></p>
+    <button class="btn btn-primary" @click="workoutCreate">Create
+      Workout</button>
+  </span>
 </template>
 
 <style>

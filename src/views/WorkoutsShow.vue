@@ -14,9 +14,9 @@ export default {
   },
   methods: {
     workoutsShow: function () {
-      console.log(`Showing selected workout....`)
+      // console.log(`Showing selected workout....`)
       axios.get(`http://localhost:3000/workouts/${this.$route.params.id}.json`).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.workout = response.data
       })
     }
@@ -27,6 +27,9 @@ export default {
 <template>
   <div class="home">
     <h1>{{workout.title}}</h1>
+    <h3>Published by: {{workout.user.first_name}} {{workout.user.last_name}}</h3>
+    <h4>Age {{workout.user.age}}</h4>
+    <h4>Email: {{workout.user.email}}</h4>
     <a v-bind:href="`/workouts/${this.$route.params.id}/edit`" v-if="workout.owner">Edit</a>
   </div>
   <!-- c\Carousel -->
@@ -40,7 +43,7 @@ export default {
           <div>Exercise number {{idx + 1}}</div>
           <div v-if="routine.added_weight == null">{{routine.sets}} Sets of {{routine.reps}}</div>
           <div v-if="routine.added_weight != null">{{routine.sets}} Sets of {{routine.reps}} with a weight
-            of{{routine.added_weight}}</div>
+            of {{routine.added_weight}}</div>
         </div>
       </div>
     </div>
@@ -58,7 +61,7 @@ export default {
 </template>
 
 <style>
-.carousel {
+#carousel {
   height: 500px;
   width: 500px;
   margin: auto;

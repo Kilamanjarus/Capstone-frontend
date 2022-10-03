@@ -22,7 +22,7 @@ export default {
           this.$router.push("/");
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
           this.errors = ["Invalid email or password."];
           this.email = "";
           this.password = "";
@@ -47,7 +47,7 @@ export default {
         <label>Password:</label>
         <input type="password" v-model="newSessionParams.password" />
       </div>
-      <input type="submit" value="Submit" />
+      <input class="btn btn-primary" type="submit" value="Submit" />
     </form>
   </div>
 </template>
