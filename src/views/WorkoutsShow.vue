@@ -41,8 +41,10 @@ export default {
         <div class="carousel-caption d-none d-md-block">
           <h2 class="exercise-name">{{routine.exercise.name}}</h2>
           <div>Exercise number {{idx + 1}}</div>
-          <div v-if="routine.added_weight == null">{{routine.sets}} Sets of {{routine.reps}}</div>
-          <div v-if="routine.added_weight != null">{{routine.sets}} Sets of {{routine.reps}} with a weight
+          <div v-if="routine.added_weight == null || routine.added_weight == 0">{{routine.sets}} Sets of
+            {{routine.reps}}</div>
+          <div v-if="routine.added_weight != null  && routine.added_weight != 0">{{routine.sets}} Sets of
+            {{routine.reps}} with a weight
             of {{routine.added_weight}}</div>
         </div>
       </div>

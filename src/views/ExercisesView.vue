@@ -173,11 +173,12 @@ export default {
       <p></p>
     </div>
     <!-- Muscle Group Search -->
-    <span class="btn-group">
-      <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary dropdown-toggle"
-          type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Muscle Group
-        </button></span>
+    <span class="dropdown">
+      <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        Muscle Group
+      </button>
       <!-- Dropdown Menu Options -->
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" @click="filterMuscles('')">All</a>
