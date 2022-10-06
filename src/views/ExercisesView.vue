@@ -259,9 +259,6 @@ export default {
       <button>Close</button>
     </form>
   </dialog>
-
-  <p v-if="filterExercises()==nil">Test</p>
-
   <!-- Pagination -->
   <nav aria-label="...">
     <ul class="pagination justify-content-center">

@@ -72,7 +72,7 @@ export default {
   <div class="home">
     <h1>{{ message }}</h1>
     <div v-if="this.error == `ERR_BAD_RESPONSE`">Workout Does not exist, check URL and try again.</div>
-    <p><button @click="this.workoutDelete(this.workout)">Delete Workout</button></p>
+    <p><button class="btn btn-danger" @click="this.workoutDelete(this.workout)">Delete Workout</button></p>
     <h2> {{workout.title}} </h2>
     <div v-for="routine in workout.routines">
       <h3><b>{{routine.exercise.name}}</b></h3>
@@ -81,8 +81,8 @@ export default {
       <p><b>Weight: </b><input type="text" v-model="routine.added_weight">lbs</p>
       <p><b>Reps: </b><input type="text" v-model="routine.reps">lbs</p>
       <p><b>Sets: </b><input type="text" v-model="routine.sets">lbs</p>
-      <button @click="routineUpdate(routine)">Update Routine</button> | <button @click="this.routineDelete(routine)"
-        onclick="">Delete Routine</button>
+      <button class="btn btn-primary" @click="routineUpdate(routine)">Update Routine</button> | <button
+        class="btn btn-danger" @click="this.routineDelete(routine)" onclick="">Delete Routine</button>
       <p></p>
     </div>
   </div>

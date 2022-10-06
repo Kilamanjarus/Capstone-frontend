@@ -6,7 +6,7 @@
     <router-link to="/workouts">Workouts</router-link> |
 
     <router-link v-if="!isLoggedIn" to="/signup">Signup</router-link> <span v-if="!isLoggedIn"> | </span>
-    <router-link v-if="!isLoggedIn" to="/login">Login</router-link> <span v-if="!isLoggedIn"> | </span>
+    <router-link v-if="!isLoggedIn" to="/login">Login</router-link> <span v-if="!isLoggedIn"></span>
     <router-link v-if="isLoggedIn" to="/logout">Logout</router-link> <span v-if="isLoggedIn"></span>
     <p v-if="isLoggedIn">Current User: {{ firstName }} {{lastName}}</p>
   </nav>

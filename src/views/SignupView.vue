@@ -36,7 +36,7 @@ export default {
         <input type="text" v-model="newUserParams.first_name" />
       </div>
       <div>
-        <label>Name:</label>
+        <label>Last Name:</label>
         <input type="text" v-model="newUserParams.last_name" />
       </div>
       <div>
