@@ -33,6 +33,9 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
+    <h1 v-if="localStorageCheck()"><a class="btn btn-primary" href="/exercises">Click here to start building your
+        workout!</a></h1>
+    <p></p>
     <h1 v-if="!localStorageCheck()"><a href="/login">Login!</a> | <a href="/signup">Signup!</a></h1>
     <h1 v-if="localStorageCheck()"><a href="/logout">Logout!</a></h1>
     <h5>{{this.creditMessage}}</h5>

@@ -1,8 +1,8 @@
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
-    <router-link to="/exercises">Exercises</router-link> |
-    <router-link to="/routines">Current Routines</router-link> |
+    <router-link v-if="isLoggedIn" to="/exercises">Exercises</router-link> <span v-if="isLoggedIn"> | </span>
+    <router-link v-if="isLoggedIn" to="/routines">Current Routines</router-link> <span v-if="isLoggedIn"> | </span>
     <router-link to="/workouts">Workouts</router-link> |
 
     <router-link v-if="!isLoggedIn" to="/signup">Signup</router-link> <span v-if="!isLoggedIn"> | </span>

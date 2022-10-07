@@ -29,7 +29,6 @@ export default {
   <div class="home">
     <h1>{{ message }}</h1>
   </div>
-  <p><b>All Workouts!</b></p>
   <!-- Card -->
   <div class="container">
     <div class="row">
