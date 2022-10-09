@@ -17,6 +17,7 @@ export default {
       pageNumber: 1,
       exerciseIndex: 0,
       exercisesOnPage: [],
+      home: 1,
 
       searchWords: "",
       muscleGroup: "",
@@ -204,8 +205,10 @@ export default {
       </div>
     </span>
     <!-- Title Word Search -->
-    <input type="text" v-model="searchWords" @change="updateExercisesOnPage()" placeholder="Exercise Title...">
-    <button class="btn btn-primary" @click="updateExercisesOnPage()">Workout Title Search...</button>
+    <input type="text" v-model="searchWords" @change="setPageNumber(home) &&updateExercisesOnPage()"
+      placeholder="Exercise Title...">
+    <button class="btn btn-primary" @click="setPageNumber(home) && updateExercisesOnPage()">Workout Title
+      Search...</button>
     <p></p>
 
 

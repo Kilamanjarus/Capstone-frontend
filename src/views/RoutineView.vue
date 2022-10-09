@@ -49,7 +49,8 @@ export default {
       // console.log(this.newWorkout)
       axios.post(`http://localhost:3000/workouts.json`, this.newWorkout).then(response => {
         // console.log(response.data)
-        this.$router.push("/workouts")
+        this.newWorkout = response.data
+        this.$router.push(`/workouts/${this.newWorkout.id}`)
       })
     },
     toggleEdit: function () {

@@ -11,6 +11,8 @@
     <p v-if="isLoggedIn">Current User: {{ firstName }} {{lastName}}</p>
   </nav>
   <router-view />
+  <p></p>
+  <div>{{creditMessage}}</div>
 </template>
 
 <script>
@@ -20,6 +22,7 @@ export default {
       isLoggedIn: !!localStorage.jwt,
       firstName: localStorage.first_name,
       lastName: localStorage.last_name,
+      creditMessage: "Exercise database, including equipment data, is all created by Justin Mozley and received through https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb/",
     }
   },
   watch: {
@@ -43,6 +46,7 @@ export default {
 
 nav {
   padding: 30px;
+  margin-bottom: 0px;
 }
 
 nav a {

@@ -31,6 +31,8 @@ export default {
     <h4>Age {{workout.user.age}}</h4>
     <h4>Email: {{workout.user.email}}</h4>
     <a class="btn btn-primary" v-bind:href="`/workouts/${this.$route.params.id}/edit`" v-if="workout.owner">Edit</a>
+    <p v-if="workout.owner">
+    </p>
   </div>
   <!-- c\Carousel -->
   <div id="carousel" class="carousel carousel-dark carousel-fade" data-bs-ride="carousel">
@@ -59,7 +61,8 @@ export default {
       <span class="visually-hidden">Next</span>
     </button>
   </div>
-
+  <p></p>
+  <a class="btn btn-secondary" href="/workouts">Return to Workouts</a>
 </template>
 
 <style>
