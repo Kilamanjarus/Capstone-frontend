@@ -19,7 +19,7 @@ export default {
           localStorage.setItem("last_name", response.data.last_name);
           localStorage.setItem("email", response.data.email);
           localStorage.setItem("userID", response.data.user_id);
-          this.$router.push("/");
+          this.$router.push("/exercises");
         })
         .catch((error) => {
           // console.log(error.response);

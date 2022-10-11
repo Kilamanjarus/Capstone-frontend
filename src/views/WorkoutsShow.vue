@@ -6,20 +6,43 @@ export default {
     return {
       message: "Welcome to the Workout!",
       workout: {},
-      routines: {}
+      routines: {},
+      userVotes: {},
+
+      params: {}
     };
   },
   created: function () {
+    this.userVoteIndex();
     this.workoutsShow();
+
   },
   methods: {
+    userVoteIndex: function () {
+      axios.get("http://localhost:3000/votes").then(response => {
+        console.log(response.data)
+        this.userVotes = response.data
+      })
+    },
     workoutsShow: function () {
       // console.log(`Showing selected workout....`)
       axios.get(`http://localhost:3000/workouts/${this.$route.params.id}.json`).then(response => {
-        // console.log(response.data)
+        console.log(response.data)
         this.workout = response.data
       })
-    }
+    },
+    workoutUpVote: function () {
+      console.log(`Starting Upvote process...`)
+      this.params = { vote: true, workout_id: this.workout.id }
+      axios.post(`http://localhost:3000/votes`, this.params)
+    },
+    workoutDownVote: function () {
+      console.log(`Starting Downvote process...`)
+      this.params = { vote: false, workout_id: this.workout.id }
+      axios.post(`http://localhost:3000/votes`).then(response => {
+        console.log(response.data)
+      })
+    },
   },
 };
 </script>
@@ -31,6 +54,11 @@ export default {
     <h4>Age {{workout.user.age}}</h4>
     <h4>Email: {{workout.user.email}}</h4>
     <a class="btn btn-primary" v-bind:href="`/workouts/${this.$route.params.id}/edit`" v-if="workout.owner">Edit</a>
+    <p>
+      <span><button class="btn btn-success" @click="this.workoutUpVote()">Upvote</button></span> | |
+      <span><button class="btn btn-warning" @click="this.workoutDownVote()">Downvote</button></span>
+    </p>
+    <p> User Votes: {{}}</p>
     <p v-if="workout.owner">
     </p>
   </div>
