@@ -12,20 +12,14 @@ export default {
       userUpvotes: 0,
       userDownvotes: 0,
 
-      params: {}
+      params: {},
+      paramsIndex: {}
     };
   },
   created: function () {
     this.workoutsShow();
   },
   methods: {
-    userVoteIndex: function () {
-      axios.get("http://localhost:3000/votes").then(response => {
-        console.log(response.data)
-        this.userVotes = response.data
-        this.userVoteCount();
-      })
-    },
     workoutsShow: function () {
       // console.log(`Showing selected workout....`)
       axios.get(`http://localhost:3000/workouts/${this.$route.params.id}.json`).then(response => {
@@ -39,7 +33,6 @@ export default {
       // console.log(this.workout.voted)
       if (this.workout.vote == null) {
         // console.log("Null, creating vote")
-        this.params = { vote: true, workout_id: this.workout.id }
         axios.post(`http://localhost:3000/votes`, this.params).then(response => {
           this.workout.vote = response.data
           // console.log(this.workout)
@@ -90,6 +83,13 @@ export default {
           this.userVoteIndex();
         })
       }
+    },
+    userVoteIndex: function () {
+      axios.get(`http://localhost:3000/votes/${this.workout.id}`).then(response => {
+        console.log(response.data)
+        this.userVotes = response.data
+        this.userVoteCount();
+      })
     },
     userVoteCount: function () {
       console.log("Starting vote count")
