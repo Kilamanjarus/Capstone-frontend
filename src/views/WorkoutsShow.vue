@@ -7,41 +7,104 @@ export default {
       message: "Welcome to the Workout!",
       workout: {},
       routines: {},
-      userVotes: {},
+      userVotes: [],
+
+      userUpvotes: 0,
+      userDownvotes: 0,
 
       params: {}
     };
   },
   created: function () {
-    this.userVoteIndex();
     this.workoutsShow();
-
   },
   methods: {
     userVoteIndex: function () {
       axios.get("http://localhost:3000/votes").then(response => {
         console.log(response.data)
         this.userVotes = response.data
+        this.userVoteCount();
       })
     },
     workoutsShow: function () {
       // console.log(`Showing selected workout....`)
       axios.get(`http://localhost:3000/workouts/${this.$route.params.id}.json`).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.workout = response.data
+        this.userVoteIndex();
       })
     },
     workoutUpVote: function () {
-      console.log(`Starting Upvote process...`)
-      this.params = { vote: true, workout_id: this.workout.id }
-      axios.post(`http://localhost:3000/votes`, this.params)
+      // console.log(`Starting Upvote process...`)
+      // console.log(this.workout.voted)
+      if (this.workout.vote == null) {
+        // console.log("Null, creating vote")
+        this.params = { vote: true, workout_id: this.workout.id }
+        axios.post(`http://localhost:3000/votes`, this.params).then(response => {
+          this.workout.vote = response.data
+          // console.log(this.workout)
+          this.userVoteIndex();
+        })
+      } else if (this.workout.vote.vote == false) {
+        // console.log("Vote is false, changing to true")
+        this.params = { vote: true }
+        axios.patch(`http://localhost:3000/votes/${this.workout.vote.id}`, this.params).then(response => {
+          // console.log(response.data)
+          this.workout.vote = response.data
+          this.userVoteIndex();
+        })
+      }
+      else {
+        // console.log("Upvoted previously, removing upvote")
+        axios.delete(`http://localhost:3000/votes/${this.workout.vote.id}`).then(response => {
+          // console.log(response.data)
+          this.workout.vote = null
+          this.userVoteIndex();
+        })
+      }
     },
     workoutDownVote: function () {
-      console.log(`Starting Downvote process...`)
-      this.params = { vote: false, workout_id: this.workout.id }
-      axios.post(`http://localhost:3000/votes`).then(response => {
-        console.log(response.data)
+      // console.log(`Starting Downvote process...`)
+      // console.log(this.workout.voted)
+      if (this.workout.vote == null) {
+        // console.log("Null, creating vote")
+        this.params = { vote: false, workout_id: this.workout.id }
+        axios.post(`http://localhost:3000/votes`, this.params).then(response => {
+          this.workout.vote = response.data
+          // console.log(this.workout)
+          this.userVoteIndex();
+        })
+      } else if (this.workout.vote.vote == true) {
+        // console.log("Vote is true, changing to false")
+        this.params = { vote: false }
+        axios.patch(`http://localhost:3000/votes/${this.workout.vote.id}`, this.params).then(response => {
+          // console.log(response.data)
+          this.workout.vote = response.data
+          this.userVoteIndex();
+        })
+      } else {
+        // console.log("Downvoted previously, removing upvote")
+        axios.delete(`http://localhost:3000/votes/${this.workout.vote.id}`).then(response => {
+          // console.log(response.data)
+          this.workout.vote = null
+          this.userVoteIndex();
+        })
+      }
+    },
+    userVoteCount: function () {
+      console.log("Starting vote count")
+      this.userDownvotes = 0
+      this.userUpvotes = 0
+      this.userVotes.forEach(vote => {
+        console.log(vote)
+        if (vote.vote == true) {
+          this.userUpvotes += 1
+        } else if (vote.vote == false) {
+          this.userDownvotes += 1
+        }
       })
+      console.log(this.userUpvotes)
+      console.log(this.userDownvotes)
     },
   },
 };
@@ -58,7 +121,7 @@ export default {
       <span><button class="btn btn-success" @click="this.workoutUpVote()">Upvote</button></span> | |
       <span><button class="btn btn-warning" @click="this.workoutDownVote()">Downvote</button></span>
     </p>
-    <p> User Votes: {{}}</p>
+    <h5> <b>User Upvotes: </b>{{this.userUpvotes}} <b>User Downvotes: </b>{{this.userDownvotes}}</h5>
     <p v-if="workout.owner">
     </p>
   </div>
