@@ -13,7 +13,13 @@ export default {
       userDownvotes: 0,
 
       params: {},
-      paramsIndex: {}
+      paramsIndex: {},
+
+      userFavorites: [],
+      favorited: false,
+      favoriteID: 0,
+
+      userID: localStorage.userID
     };
   },
   created: function () {
@@ -26,6 +32,7 @@ export default {
         // console.log(response.data)
         this.workout = response.data
         this.userVoteIndex();
+        this.userFavoriteIndex();
       })
     },
     workoutUpVote: function () {
@@ -86,42 +93,93 @@ export default {
     },
     userVoteIndex: function () {
       axios.get(`http://localhost:3000/votes/${this.workout.id}`).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.userVotes = response.data
         this.userVoteCount();
       })
     },
     userVoteCount: function () {
-      console.log("Starting vote count")
+      // console.log("Starting vote count")
       this.userDownvotes = 0
       this.userUpvotes = 0
       this.userVotes.forEach(vote => {
-        console.log(vote)
+        // console.log(vote)
         if (vote.vote == true) {
           this.userUpvotes += 1
         } else if (vote.vote == false) {
           this.userDownvotes += 1
         }
       })
-      console.log(this.userUpvotes)
-      console.log(this.userDownvotes)
+      // console.log(this.userUpvotes)
+      // console.log(this.userDownvotes)
     },
+    userFavoriteIndex: function () {
+      // console.log("Favorited index...")
+      axios.get(`http://localhost:3000/favorites.json`).then(response => {
+        // console.log(response.data)
+        this.userFavorites = response.data
+        this.userFavoriteCheck();
+      })
+    },
+    userFavoriteCheck: function () {
+      // console.log("Searching for favorite")
+      this.userFavorites.forEach(userFav => {
+        // console.log(userFav)
+        if (userFav.workout_id == this.workout.id && userFav.user_id == this.userID) {
+          // console.log("True")
+          this.favorited = true
+        } else {
+          // console.log("False")
+          this.favorited = false
+        }
+      })
+      console.log(this.favorited)
+    },
+    userAddFavorite: function () {
+      console.log("Adding favorite.")
+      this.params = { workout_id: this.workout.id, user_id: this.userID }
+      axios.post(`http://localhost:3000/favorites.json`, this.params).then(response => {
+        console.log(response.data)
+        this.userFavoriteIndex();
+      })
+    },
+    userRemoveFavorite: function () {
+      console.log("Adding favorite.")
+      this.userFavorites.forEach(userFav => {
+        // console.log(userFav)
+        if (userFav.workout_id == this.workout.id && userFav.user_id == this.userID) {
+          this.favoriteID = userFav.id
+        }
+      })
+      axios.delete(`http://localhost:3000/favorites/${this.favoriteID}`).then(response => {
+        console.log(response.data)
+        this.userFavoriteIndex();
+      })
+    }
   },
 };
 </script>
 
 <template>
   <div class="home">
+    <!-- Information -->
     <h1>{{workout.title}}</h1>
     <h3>Published by: {{workout.user.first_name}} {{workout.user.last_name}}</h3>
     <h4>Age {{workout.user.age}}</h4>
     <h4>Email: {{workout.user.email}}</h4>
     <a class="btn btn-primary" v-bind:href="`/workouts/${this.$route.params.id}/edit`" v-if="workout.owner">Edit</a>
+    <!-- Voting Section -->
     <p>
       <span><button class="btn btn-success" @click="this.workoutUpVote()">Upvote</button></span> | |
       <span><button class="btn btn-warning" @click="this.workoutDownVote()">Downvote</button></span>
     </p>
     <h5> <b>User Upvotes: </b>{{this.userUpvotes}} <b>User Downvotes: </b>{{this.userDownvotes}}</h5>
+    <!-- Favorite Section -->
+    <p v-if="this.favorited == false"><button class="btn btn-primary" @click="userAddFavorite()">Favorite!</button>
+    </p>
+    <p v-if="this.favorited == true"><button class="btn btn-primary" @click="userRemoveFavorite()">UnFavorite!</button>
+    </p>
+
     <p v-if="workout.owner">
     </p>
   </div>
