@@ -57,7 +57,7 @@ export default {
         if (this.favoriteFilter == false) {
           return workout.title.toLowerCase().includes(this.searchWords.toLowerCase())
         } else if (this.favoriteFilter == true) {
-          return workout.title.toLowerCase().includes(this.searchWords.toLowerCase()) && workout.favorited == true
+          return workout.title.toLowerCase().includes(this.searchWords.toLowerCase()) && workout.favorited != null
         }
       })
     },
@@ -94,6 +94,43 @@ export default {
       console.log(this.favoriteFilter)
       this.updateWorkoutsOnPage()
     },
+    userFavoriteIndex: function () {
+      // console.log("Favorited index...")
+      axios.get(`http://localhost:3000/favorites.json`).then(response => {
+        // console.log(response.data)
+        this.userFavorites = response.data
+        this.userFavoriteCheck();
+      })
+    },
+    userFavoriteCheck: function () {
+      // console.log("Searching for favorite")
+      this.userFavorites.forEach(userFav => {
+        // console.log(userFav)
+        if (userFav.workout_id == this.workout.id && userFav.user_id == this.userID) {
+          // console.log("True")
+          this.favorited = true
+        } else {
+          // console.log("False")
+          this.favorited = false
+        }
+      })
+      console.log(this.favorited)
+    },
+    userAddFavorite: function (workout) {
+      console.log("Adding favorite.")
+      this.params = { workout_id: workout.id, user_id: this.userID }
+      axios.post(`http://localhost:3000/favorites.json`, this.params).then(response => {
+        console.log(response.data)
+        workout.favorited = true
+      })
+    },
+    userRemoveFavorite: function (workout) {
+      console.log("Adding favorite.")
+      axios.delete(`http://localhost:3000/favorites/${workout.id}`).then(response => {
+        console.log(response.data)
+        workout.favorited = false
+      })
+    }
   },
 };
 </script>
@@ -143,6 +180,12 @@ export default {
                 <span class="visually-hidden">Next</span>
               </button>
             </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary" v-if="workout.favorited == null"
+              @click="this.userAddFavorite(workout)">Favorite!</button>
+            <button class="btn btn-danger" v-if="workout.favorited != null"
+              @click="this.userRemoveFavorite(workout)">Unfavorite!</button>
           </div>
         </div>
       </div>

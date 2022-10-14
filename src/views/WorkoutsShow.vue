@@ -116,7 +116,7 @@ export default {
     userFavoriteIndex: function () {
       // console.log("Favorited index...")
       axios.get(`http://localhost:3000/favorites.json`).then(response => {
-        // console.log(response.data)
+        console.log(response.data)
         this.userFavorites = response.data
         this.userFavoriteCheck();
       })
@@ -126,11 +126,8 @@ export default {
       this.userFavorites.forEach(userFav => {
         // console.log(userFav)
         if (userFav.workout_id == this.workout.id && userFav.user_id == this.userID) {
-          // console.log("True")
+          console.log("True")
           this.favorited = true
-        } else {
-          // console.log("False")
-          this.favorited = false
         }
       })
       console.log(this.favorited)
@@ -177,7 +174,7 @@ export default {
     <!-- Favorite Section -->
     <p v-if="this.favorited == false"><button class="btn btn-primary" @click="userAddFavorite()">Favorite!</button>
     </p>
-    <p v-if="this.favorited == true"><button class="btn btn-primary" @click="userRemoveFavorite()">UnFavorite!</button>
+    <p v-if="this.favorited == true"><button class="btn btn-warning" @click="userRemoveFavorite()">UnFavorite!</button>
     </p>
 
     <p v-if="workout.owner">
