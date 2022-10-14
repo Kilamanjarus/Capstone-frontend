@@ -18,6 +18,8 @@ export default {
       home: 1,
       error: "",
       searchWords: "",
+      favoriteFilter: false,
+
     };
   },
   created: function () {
@@ -27,7 +29,7 @@ export default {
     workoutsIndex: function () {
       // console.log(`Getting workouts...`)
       axios.get(`http://localhost:3000/workouts.json`).then(response => {
-        // console.log(response.data)
+        console.log(response.data)
         this.workouts = response.data
         this.updateWorkoutsOnPage();
       })
@@ -52,7 +54,11 @@ export default {
     },
     filterWorkouts: function () {
       return this.workouts.filter(workout => {
-        return workout.title.toLowerCase().includes(this.searchWords.toLowerCase())
+        if (this.favoriteFilter == false) {
+          return workout.title.toLowerCase().includes(this.searchWords.toLowerCase())
+        } else if (this.favoriteFilter == true) {
+          return workout.title.toLowerCase().includes(this.searchWords.toLowerCase()) && workout.favorited == true
+        }
       })
     },
     setPageNumber: function (page) {
@@ -78,6 +84,16 @@ export default {
       this.updateWorkoutsOnPage(this.pageNumber);
       // console.log(this.pageNumber)
     },
+    filterFav: function () {
+      console.log("Favorite Filter Toggle")
+      if (this.favoriteFilter == false) {
+        this.favoriteFilter = true
+      } else if (this.favoriteFilter == true) {
+        this.favoriteFilter = false
+      }
+      console.log(this.favoriteFilter)
+      this.updateWorkoutsOnPage()
+    },
   },
 };
 </script>
@@ -87,6 +103,12 @@ export default {
     <h1>{{ message }}</h1>
   </div>
   <!-- Search Bar -->
+  <span v-if="favoriteFilter == false">
+    <button @click="filterFav()" class="btn btn-primary">Filter by Favorites?</button>
+  </span>
+  <span v-if="favoriteFilter == true">
+    <button @click="filterFav()" class="btn btn-danger">Unfilter by Favorites?</button>
+  </span>
   <input type="text" v-model="searchWords" @change="setPageNumber(home) &&updateWorkoutsOnPage()"
     placeholder="Workout Title...">
   <button class="btn btn-primary" @click="setPageNumber(home) && updateWorkoutsOnPage()">Workout Title
