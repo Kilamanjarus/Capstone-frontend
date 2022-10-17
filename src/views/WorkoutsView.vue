@@ -5,7 +5,7 @@ export default {
   data: function () {
     return {
       message: "Workouts!",
-      workouts: {},
+      workouts: [],
       newWorkout: {},
       selectedWorkout: {},
 
@@ -19,7 +19,6 @@ export default {
       error: "",
       searchWords: "",
       favoriteFilter: false,
-
     };
   },
   created: function () {
@@ -114,23 +113,23 @@ export default {
           this.favorited = false
         }
       })
-      console.log(this.favorited)
+      // console.log(this.favorited)
     },
     userAddFavorite: function (workout) {
-      console.log("Adding favorite.")
+      // console.log("Adding favorite.")
       this.params = { workout_id: workout.id, user_id: this.userID }
       axios.post(`http://localhost:3000/favorites.json`, this.params).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         workout.favorited = true
       })
     },
     userRemoveFavorite: function (workout) {
-      console.log("Adding favorite.")
+      // console.log("Adding favorite.")
       axios.delete(`http://localhost:3000/favorites/${workout.id}`).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         workout.favorited = false
       })
-    }
+    },
   },
 };
 </script>
@@ -158,6 +157,10 @@ export default {
         <div class="card h-100">
           <div class="card-body">
             <a id="workout-title" v-bind:href="`/workouts/${workout.id}`"> {{ workout.title }}</a>
+            <div>
+              <span id="rout-likes">Votes: {{workout.UpVotes.length + workout.DownVotes.length}}</span>
+              <div id="rout-likes"> Score: {{workout.UpVotes.length - workout.DownVotes.length}}</div>
+            </div>
             <!-- Carousel -->
             <div v-bind:id="`carousel-workouts-${workout.id}`" class="carousel carousel-dark carousel-fade"
               data-bs-ride="carousel">

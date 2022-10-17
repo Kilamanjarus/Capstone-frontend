@@ -12,7 +12,7 @@ export default {
       currentExercise: {},
       newRoutine: {},
 
-      exercisePageAmount: 10,
+      exercisePageAmount: 0,
       exercisesPerPage: 15,
       pageNumber: 1,
       exerciseIndex: 0,
@@ -109,6 +109,7 @@ export default {
       if (this.filterExercises().length == 0) {
         this.error = "ERR_BAD_RESPONSE"
       }
+      // console.log(this.exercisePageAmount)
     },
     filterExercises: function () {
       return this.exercises.filter(exercise => {
@@ -147,7 +148,7 @@ export default {
     },
     reloadPage: function () {
       window.location.reload();
-    }
+    },
   },
 };
 </script>
@@ -156,7 +157,7 @@ export default {
   <div class="home">
     <h1>{{ message }}</h1>
     <!-- Equipment Search W/ Edit Button -->
-    <button class="btn btn-primary" @click="toggleEquipment()">Edit Your Equipment...</button>
+    <button class="btn btn-warning" @click="toggleEquipment()">Edit Your Equipment...</button>
     <p></p>
     <div v-if="this.editEquipment == true">
       <div v-for="arrays in equipments">
@@ -233,7 +234,7 @@ export default {
                 Workout...</button>
             </div>
             <div v-if="exercise.on_routine == true">
-              <button class="btn btn-primary mt-auto align-self-bottom" @click="editRoutine()">Edit
+              <button class="btn btn-warning mt-auto align-self-bottom" @click="editRoutine()">Edit
                 Routine...</button>
             </div>
             </p>
@@ -292,10 +293,10 @@ export default {
       <li class="page-item" v-if="pageNumber <= exercisePageAmount-4">
         <a class="page-link" @click="setPageNumber(this.exercisePageAmount)">{{exercisePageAmount}}</a>
       </li>
-      <li class="page-item" v-if="pageNumber == exercisePageAmount">
+      <li class="page-item" v-if="pageNumber == exercisePageAmount || exercisePageAmount==0 ">
         <a class="page-link disabled" href="#">Next</a>
       </li>
-      <li class=" page-item" v-if="pageNumber != exercisePageAmount">
+      <li class=" page-item" v-if="pageNumber != exercisePageAmount && exercisePageAmount != 0 ">
         <a class="page-link" @click="setNextPageNumber()">Next</a>
       </li>
     </ul>

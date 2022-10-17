@@ -116,7 +116,7 @@ export default {
     userFavoriteIndex: function () {
       // console.log("Favorited index...")
       axios.get(`http://localhost:3000/favorites.json`).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.userFavorites = response.data
         this.userFavoriteCheck();
       })
@@ -126,33 +126,33 @@ export default {
       this.userFavorites.forEach(userFav => {
         // console.log(userFav)
         if (userFav.workout_id == this.workout.id && userFav.user_id == this.userID) {
-          console.log("True")
+          // console.log("True")
           this.favorited = true
         }
       })
-      console.log(this.favorited)
+      // console.log(this.favorited)
     },
     userAddFavorite: function () {
-      console.log("Adding favorite.")
+      // console.log("Adding favorite.")
       this.params = { workout_id: this.workout.id, user_id: this.userID }
       axios.post(`http://localhost:3000/favorites.json`, this.params).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.userFavoriteIndex();
       })
     },
     userRemoveFavorite: function () {
-      console.log("Adding favorite.")
+      // console.log("Adding favorite.")
       this.userFavorites.forEach(userFav => {
-        // console.log(userFav)
+        console.log(userFav)
         if (userFav.workout_id == this.workout.id && userFav.user_id == this.userID) {
           this.favoriteID = userFav.id
         }
       })
       axios.delete(`http://localhost:3000/favorites/${this.favoriteID}`).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.userFavoriteIndex();
       })
-    }
+    },
   },
 };
 </script>
@@ -161,7 +161,7 @@ export default {
   <div class="home">
     <!-- Information -->
     <h1>{{workout.title}}</h1>
-    <h3>Published by: {{workout.user.first_name}} {{workout.user.last_name}}</h3>
+    <h3>Published by: {{workout.user.username}}</h3>
     <h4>Age {{workout.user.age}}</h4>
     <h4>Email: {{workout.user.email}}</h4>
     <a class="btn btn-primary" v-bind:href="`/workouts/${this.$route.params.id}/edit`" v-if="workout.owner">Edit</a>
@@ -188,12 +188,14 @@ export default {
         <img v-bind:src="routine.exercise.gifUrl" class="d-block w-100" alt="">
         <div class="carousel-caption d-none d-md-block">
           <h2 class="exercise-name">{{routine.exercise.name}}</h2>
-          <div>Exercise number {{idx + 1}}</div>
-          <div v-if="routine.added_weight == null || routine.added_weight == 0">{{routine.sets}} Sets of
-            {{routine.reps}}</div>
-          <div v-if="routine.added_weight != null  && routine.added_weight != 0">{{routine.sets}} Sets of
-            {{routine.reps}} with a weight
-            of {{routine.added_weight}}</div>
+          <div class="bottom-text">
+            <div>Exercise number {{idx + 1}} of {{this.workout.routines.length}}</div>
+            <div v-if="routine.added_weight == null || routine.added_weight == 0">{{routine.sets}} Sets of
+              {{routine.reps}}</div>
+            <div v-if="routine.added_weight != null  && routine.added_weight != 0">{{routine.sets}} Sets of
+              {{routine.reps}} with a weight
+              of {{routine.added_weight}}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -224,6 +226,10 @@ export default {
 
 .exercise-name {
   margin-bottom: 420px;
+}
+
+.bottom-text {
+  background-color: white;
 }
 
 body {
