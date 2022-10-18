@@ -69,6 +69,9 @@ export default {
       })
       exercise.on_routine = true;
     },
+    editRoutine: function () {
+      this.$router.push("/routines")
+    },
     setPageNumber: function (page) {
       // console.log(page)
       this.pageNumber = page
@@ -139,9 +142,6 @@ export default {
         })
       })
       return this.equipmentExcercises
-    },
-    editRoutine: function () {
-      this.$router.push("/routines")
     },
     toggleEquipment: function () {
       this.editEquipment = !this.editEquipment

@@ -9,6 +9,8 @@ export default {
       routines: {},
       userVotes: [],
 
+      newRoutine: {},
+
       userUpvotes: 0,
       userDownvotes: 0,
 
@@ -153,7 +155,23 @@ export default {
         this.userFavoriteIndex();
       })
     },
-  },
+    copyWorkoutRoutines: function () {
+      // console.log(`Creating new routine....`)
+      // console.log(exercise)
+      this.workout.routines.forEach(routine => {
+        console.log(routine)
+        this.newRoutine.exercise_id = routine.exercise_id
+        this.newRoutine.added_weight = routine.added_weight
+        this.newRoutine.reps = routine.reps
+        this.newRoutine.sets = routine.sets
+        axios.post("http://localhost:3000/routines.json", this.newRoutine).then(response => {
+          console.log(response.data)
+          this.newRoutine = {}
+        })
+      })
+      // console.log(this.newRoutine)
+    },
+  }
 };
 </script>
 
@@ -209,6 +227,9 @@ export default {
       <span class="visually-hidden">Next</span>
     </button>
   </div>
+  <p></p>
+  <span>Like the workout and want to build off it? <button @click="copyWorkoutRoutines()" class="btn btn-primary">Click
+      Here!</button></span>
   <p></p>
   <a class="btn btn-secondary" href="/workouts">Return to Workouts</a>
 </template>
