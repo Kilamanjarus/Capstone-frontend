@@ -18,6 +18,7 @@ export default {
       home: 1,
       error: "",
       searchWords: "",
+      searchWordsUser: "",
       favoriteFilter: false,
     };
   },
@@ -53,10 +54,11 @@ export default {
     },
     filterWorkouts: function () {
       return this.workouts.filter(workout => {
+        console.log(workout)
         if (this.favoriteFilter == false) {
-          return workout.title.toLowerCase().includes(this.searchWords.toLowerCase())
+          return workout.title.toLowerCase().includes(this.searchWords.toLowerCase()) && workout.owner.username.toLowerCase().includes(this.searchWordsUser.toLowerCase())
         } else if (this.favoriteFilter == true) {
-          return workout.title.toLowerCase().includes(this.searchWords.toLowerCase()) && workout.favorited != null
+          return workout.title.toLowerCase().includes(this.searchWords.toLowerCase()) && workout.favorited != null && workout.owner.username.toLowerCase().includes(this.searchWordsUser.toLowerCase())
         }
       })
     },
@@ -149,6 +151,13 @@ export default {
     placeholder="Workout Title...">
   <button class="btn btn-primary" @click="setPageNumber(home) && updateWorkoutsOnPage()">Workout Title
     Search...</button>
+  <p></p>
+  <div>
+    <input type="text" v-model="searchWordsUser" @change="setPageNumber(home) &&updateWorkoutsOnPage()"
+      placeholder="Owner Username...">
+    <button class="btn btn-primary" @click="setPageNumber(home) && updateWorkoutsOnPage()">Workout Owner
+      Search...</button>
+  </div>
   <p></p>
   <!-- Card -->
   <div class="container">
