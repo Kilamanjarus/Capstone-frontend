@@ -21,7 +21,11 @@ export default {
       favorited: false,
       favoriteID: 0,
 
-      userID: localStorage.userID
+      comments: [],
+      postComments: [],
+      newComment: { comment: "Enter text here..." },
+
+      userID: localStorage.userID,
     };
   },
   created: function () {
@@ -35,6 +39,7 @@ export default {
         this.workout = response.data
         this.userVoteIndex();
         this.userFavoriteIndex();
+        this.commentsIndex();
       })
     },
     workoutUpVote: function () {
@@ -171,6 +176,34 @@ export default {
       })
       // console.log(this.newRoutine)
     },
+    commentsIndex: function () {
+      console.log("Getting comments")
+      axios.get(`http://localhost:3000/comments`).then(response => {
+        // console.log(response.data)
+        this.comments = response.data
+        this.comments.forEach(comment => {
+          // console.log(comment.workout_id)
+          // console.log(this.workout.id)
+          if (comment.workout_id == this.workout.id) {
+            this.postComments.push(comment)
+          }
+        })
+        // console.log("Post Comments:")
+        // console.log(this.postComments)
+      })
+    },
+    commentPost: function () {
+      console.log("Posting Comment")
+      this.newComment.workout_id = this.workout.id
+      console.log(this.newComment)
+      axios.post(`http://localhost:3000/comments`, this.newComment).then(response => {
+        console.log(response.data)
+        this.postComments.push(response.data)
+      })
+    },
+    commentDelete: function (comment) {
+      console.log("Deleting Comment")
+    }
   }
 };
 </script>
@@ -227,9 +260,22 @@ export default {
       <span class="visually-hidden">Next</span>
     </button>
   </div>
+  <!-- Comments -->
   <p></p>
+  <label for="comment">How do you like this workout?</label>
+  <br>
+  <span>
+    <textarea id="comment" name="comment" rows="4" cols="50" v-model="this.newComment.comment"></textarea>
+    <button id="postCommentButton" class="btn btn-primary" @click="this.commentPost()">Post Comment</button>
+  </span>
+  <p v-for="comment in this.postComments"><b>{{comment.comment}}</b>
+    <br /> Posted by {{comment.user_id}}
+  </p>
+  <p></p>
+  <!-- Duplicate Workout -->
   <span>Like the workout and want to build off it? <button @click="copyWorkoutRoutines()" class="btn btn-primary">Click
-      Here!</button></span>
+      Here!</button>
+  </span>
   <p></p>
   <a class="btn btn-secondary" href="/workouts">Return to Workouts</a>
 </template>
@@ -239,6 +285,10 @@ export default {
   height: 500px;
   width: 500px;
   margin: auto;
+}
+
+#postCommentButton {
+  margin-bottom: 100px;
 }
 
 .carousel-caption {

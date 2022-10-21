@@ -29,7 +29,7 @@ export default {
     workoutsIndex: function () {
       // console.log(`Getting workouts...`)
       axios.get(`http://localhost:3000/workouts.json`).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.workouts = response.data
         this.updateWorkoutsOnPage();
       })
@@ -54,7 +54,7 @@ export default {
     },
     filterWorkouts: function () {
       return this.workouts.filter(workout => {
-        console.log(workout)
+        // console.log(workout)
         if (this.favoriteFilter == false) {
           return workout.title.toLowerCase().includes(this.searchWords.toLowerCase()) && workout.owner.username.toLowerCase().includes(this.searchWordsUser.toLowerCase())
         } else if (this.favoriteFilter == true) {
