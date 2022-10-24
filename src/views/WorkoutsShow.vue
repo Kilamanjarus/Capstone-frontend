@@ -178,8 +178,9 @@ export default {
     },
     commentsIndex: function () {
       console.log("Getting comments")
-      axios.get(`http://localhost:3000/comments`).then(response => {
+      axios.get(`http://localhost:3000/comments.json`).then(response => {
         // console.log(response.data)
+        this.postComments = []
         this.comments = response.data
         this.comments.forEach(comment => {
           // console.log(comment.workout_id)
@@ -193,16 +194,23 @@ export default {
       })
     },
     commentPost: function () {
-      console.log("Posting Comment")
+      // console.log("Posting Comment")
       this.newComment.workout_id = this.workout.id
-      console.log(this.newComment)
+      // console.log(this.newComment)
       axios.post(`http://localhost:3000/comments`, this.newComment).then(response => {
-        console.log(response.data)
-        this.postComments.push(response.data)
+        // console.log(response.data)
+        this.commentsIndex();
       })
     },
     commentDelete: function (comment) {
-      console.log("Deleting Comment")
+      // console.log(comment)
+      if (comment.owner == true) {
+        axios.delete(`http://localhost:3000/comments/${comment.id}`).then(response => {
+          // console.log(response.data)
+          this.commentsIndex();
+        })
+      }
+      // console.log("Deleting Comment")
     }
   }
 };
@@ -269,7 +277,9 @@ export default {
     <button id="postCommentButton" class="btn btn-primary" @click="this.commentPost()">Post Comment</button>
   </span>
   <p v-for="comment in this.postComments"><b>{{comment.comment}}</b>
-    <br /> Posted by {{comment.user_id}}
+    {{ }}<span><button type="button" class="btn btn-danger btn-sm" v-if="comment.owner == true"
+        @click="this.commentDelete(comment);">Delete</button></span>
+    <br /> Posted by {{comment.user.username}}
   </p>
   <p></p>
   <!-- Duplicate Workout -->
