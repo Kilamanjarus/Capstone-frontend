@@ -25,6 +25,10 @@ export default {
       postComments: [],
       newComment: { comment: "Enter text here..." },
 
+      commentVotes: [],
+      newCommentVote: {},
+      commentScore: 0,
+
       userID: localStorage.userID,
     };
   },
@@ -179,13 +183,23 @@ export default {
     commentsIndex: function () {
       console.log("Getting comments")
       axios.get(`http://localhost:3000/comments.json`).then(response => {
-        // console.log(response.data)
+        console.log(response.data)
         this.postComments = []
         this.comments = response.data
         this.comments.forEach(comment => {
           // console.log(comment.workout_id)
           // console.log(this.workout.id)
           if (comment.workout_id == this.workout.id) {
+            this.commentScore = 0
+            comment.likes.forEach(like => {
+              if (like.status == "Liked") {
+                this.commentScore++
+              } else if (like.status == "Disliked") {
+                this.commentScore--
+              }
+            })
+            comment.score = this.commentScore
+            console.log(comment)
             this.postComments.push(comment)
           }
         })
@@ -286,7 +300,7 @@ export default {
   <p v-for="comment in this.postComments"><b>{{comment.comment}}</b>
     {{ }}<span><button type="button" class="btn btn-danger btn-sm" v-if="comment.owner == true"
         @click="this.commentDelete(comment);">Delete</button></span>
-    <br /> Posted by {{comment.user.username}}
+    <br /> Posted by {{comment.user.username}} &nbsp; <b>Score: </b>{{comment.score}}
   <div>
     <button id="button-link" @click="this.commentLike();" v-if="comment.owner != true">Like</button>&nbsp;
     <button id="button-link" @click="this.commentDislike();" v-if="comment.owner != true">Dislike</button>
