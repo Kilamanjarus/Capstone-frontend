@@ -211,7 +211,13 @@ export default {
         })
       }
       // console.log("Deleting Comment")
-    }
+    },
+    commentLike: function () {
+      console.log("Liking Comment")
+    },
+    commentDislike: function () {
+      console.log("Disliking Comment")
+    },
   }
 };
 </script>
@@ -226,7 +232,8 @@ export default {
     <a class="btn btn-primary" v-bind:href="`/workouts/${this.$route.params.id}/edit`" v-if="workout.owner">Edit</a>
     <!-- Voting Section -->
     <p>
-      <span><button class="btn btn-success" @click="this.workoutUpVote()">Upvote</button></span> | |
+      &nbsp;&nbsp;&nbsp;&nbsp;<span><button class="btn btn-success" @click="this.workoutUpVote()">Upvote</button></span>
+      | |
       <span><button class="btn btn-warning" @click="this.workoutDownVote()">Downvote</button></span>
     </p>
     <h5> <b>User Upvotes: </b>{{this.userUpvotes}} <b>User Downvotes: </b>{{this.userDownvotes}}</h5>
@@ -273,13 +280,17 @@ export default {
   <label for="comment">How do you like this workout?</label>
   <br>
   <span>
-    <textarea id="comment" name="comment" rows="4" cols="50" v-model="this.newComment.comment"></textarea>
+    <textarea id="comment" name="comment" rows="4" cols="50" v-model="this.newComment.comment"></textarea> {{ }}
     <button id="postCommentButton" class="btn btn-primary" @click="this.commentPost()">Post Comment</button>
   </span>
   <p v-for="comment in this.postComments"><b>{{comment.comment}}</b>
     {{ }}<span><button type="button" class="btn btn-danger btn-sm" v-if="comment.owner == true"
         @click="this.commentDelete(comment);">Delete</button></span>
     <br /> Posted by {{comment.user.username}}
+  <div>
+    <button id="button-link" @click="this.commentLike();" v-if="comment.owner != true">Like</button>&nbsp;
+    <button id="button-link" @click="this.commentDislike();" v-if="comment.owner != true">Dislike</button>
+  </div>
   </p>
   <p></p>
   <!-- Duplicate Workout -->
@@ -299,6 +310,18 @@ export default {
 
 #postCommentButton {
   margin-bottom: 100px;
+}
+
+#button-link {
+  background: none !important;
+  border: none;
+  padding: 0 !important;
+  /*optional*/
+  font-family: arial, sans-serif;
+  /*input has OS specific font-family*/
+  color: #069;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .carousel-caption {
