@@ -2,8 +2,8 @@
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link v-if="isLoggedIn" to="/exercises">Exercises</router-link> <span v-if="isLoggedIn"> | </span>
+    <router-link v-if="isLoggedIn" to="/workouts">Workouts</router-link> <span v-if="isLoggedIn"> | </span>
     <router-link v-if="isLoggedIn" to="/routines">Current Routines</router-link> <span v-if="isLoggedIn"> | </span>
-    <router-link to="/workouts">Workouts</router-link> |
 
     <router-link v-if="!isLoggedIn" to="/signup">Signup</router-link> <span v-if="!isLoggedIn"> | </span>
     <router-link v-if="!isLoggedIn" to="/login">Login</router-link> <span v-if="!isLoggedIn"></span>
