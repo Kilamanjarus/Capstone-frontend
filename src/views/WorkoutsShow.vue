@@ -226,8 +226,12 @@ export default {
       }
       // console.log("Deleting Comment")
     },
-    commentLike: function () {
+    commentLike: function (comment) {
       console.log("Liking Comment")
+      console.log(this.userID)
+      if (comment.likes.includes(this.userID) == false) {
+        console.log("No like matches, adding like!")
+      } else if (comment.likes.includes(this.userID) == true)
     },
     commentDislike: function () {
       console.log("Disliking Comment")
@@ -302,8 +306,8 @@ export default {
         @click="this.commentDelete(comment);">Delete</button></span>
     <br /> Posted by {{comment.user.username}} &nbsp; <b>Score: </b>{{comment.score}}
   <div>
-    <button id="button-link" @click="this.commentLike();" v-if="comment.owner != true">Like</button>&nbsp;
-    <button id="button-link" @click="this.commentDislike();" v-if="comment.owner != true">Dislike</button>
+    <button id="button-link" @click="this.commentLike(comment);" v-if="comment.owner != true">Like</button>&nbsp;
+    <button id="button-link" @click="this.commentDislike(comment);" v-if="comment.owner != true">Dislike</button>
   </div>
   </p>
   <p></p>
