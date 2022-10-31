@@ -229,9 +229,9 @@ export default {
     commentLike: function (comment) {
       console.log("Liking Comment")
       console.log(this.userID)
-      if (comment.user_liked == true) {
+      if (comment.user_liked.status == "Liked") {
         console.log("User has liked comment previously")
-      } else {
+      } else if (comment.user_liked == null) {
         this.params = {}
         this.params.user_workout_comment_id = comment.id
         this.params.status = "Liked"
@@ -240,10 +240,41 @@ export default {
           console.log(response.data)
           this.commentsIndex();
         })
+      } else if (comment.user_liked.status == "Disliked") {
+        console.log("User has previously disliked comment, liking comment.")
+        this.params.status = "Liked"
+        this.params.user_id = this.userID
+        console.log(comment.id)
+        axios.patch(`http://localhost:3000/commentlikes/${comment.user_liked.id}.json`, this.params).then(response => {
+          console.log(response.data)
+          this.commentsIndex();
+        })
       }
     },
-    commentDislike: function () {
+    commentDislike: function (comment) {
       console.log("Disliking Comment")
+      console.log(this.userID)
+      if (comment.user_liked.status == "Disliked") {
+        console.log("User has Disliked comment previously")
+      } else if (comment.user_liked == null) {
+        this.params = {}
+        this.params.user_workout_comment_id = comment.id
+        this.params.status = "Disliked"
+        this.params.user_id = this.userID
+        axios.post("http://localhost:3000/commentlikes.json", this.params).then(response => {
+          console.log(response.data)
+          this.commentsIndex();
+        })
+      } else if (comment.user_liked.status == "Liked") {
+        console.log("User has previously liked comment, disliking comment.")
+        this.params.status = "Disliked"
+        this.params.user_id = this.userID
+        console.log(comment.id)
+        axios.patch(`http://localhost:3000/commentlikes/${comment.user_liked.id}.json`, this.params).then(response => {
+          console.log(response.data)
+          this.commentsIndex();
+        })
+      }
     },
   }
 };
