@@ -229,9 +229,18 @@ export default {
     commentLike: function (comment) {
       console.log("Liking Comment")
       console.log(this.userID)
-      if (comment.likes.includes(this.userID) == false) {
-        console.log("No like matches, adding like!")
-      } else if (comment.likes.includes(this.userID) == true)
+      if (comment.user_liked == true) {
+        console.log("User has liked comment previously")
+      } else {
+        this.params = {}
+        this.params.user_workout_comment_id = comment.id
+        this.params.status = "Liked"
+        this.params.user_id = this.userID
+        axios.post("http://localhost:3000/commentlikes.json", this.params).then(response => {
+          console.log(response.data)
+          this.commentsIndex();
+        })
+      }
     },
     commentDislike: function () {
       console.log("Disliking Comment")
