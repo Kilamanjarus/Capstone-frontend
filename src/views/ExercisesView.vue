@@ -11,6 +11,7 @@ export default {
       added: false,
       currentExercise: {},
       newRoutine: {},
+      newRoutineSet: { sets: 0, reps: 0, added_weight: 0 },
 
       exercisePageAmount: 0,
       exercisesPerPage: 15,
@@ -37,6 +38,7 @@ export default {
   methods: {
     exercisesIndex: function () {
       axios.get("http://localhost:3000/exercises.json").then(response => {
+        // console.log(response.data)
         this.exercises = response.data
         this.updateExercisesOnPage();
       }).catch(error => {
@@ -59,15 +61,39 @@ export default {
       // console.log(`Creating new routine....`)
       // console.log(exercise)
       this.newRoutine.exercise_id = exercise.id
-      if (exercise.equipment == "Body Weight" || exercise.equipment == "Assisted" || exercise.equipment == "Wheeler Roller" || exercise.equipment == "Stability Ball") {
-        this.newRoutine.added_weight = 0
-      }
+      this.neRoutineSets.forEach(set => {
+        if (exercise.equipment == "Body Weight" || exercise.equipment == "Assisted" || exercise.equipment == "Wheeler Roller" || exercise.equipment == "Stability Ball") {
+          set.added_weight = 0
+        }
+
+      })
       // console.log(this.newRoutine)
       axios.post("http://localhost:3000/routines.json", this.newRoutine).then(response => {
         // console.log(response.data)
         this.newRoutine = {}
       })
       exercise.on_routine = true;
+    },
+    routineSetCreate: function () {
+      axios.post("http://localhost:3000/routinesets.json", this.newRoutineSet).then(response => {
+        console.log(response.data)
+      })
+    },
+    addSet: function (currentExercise) {
+      console.log("Adding Set")
+      this.newRoutineSet.exercise_id = currentExercise.id
+      console.log(this.newRoutineSet)
+      axios.post(`http://localhost:3000/routinesets`, this.newRoutineSet).then(response => {
+        console.log(response.data)
+        currentExercise.routine_sets.push(response.data)
+        this.newRoutineSet = { sets: 0, reps: 0, added_weight: 0 }
+      })
+    },
+    removeSet: function (set) {
+      axios.delete(`http://localhost:3000/routinesets/${set.id}`).then(response => {
+        console.log(response.data)
+        set = {}
+      })
     },
     editRoutine: function () {
       this.$router.push("/routines")
@@ -251,14 +277,17 @@ export default {
       <p><b>Exercise Target:</b> {{ currentExercise.style }}</p>
       <p><b>Exercise Muscle Grouping:</b> {{ currentExercise.muscle }}</p>
       <p><b>Exercise Equipment:</b> {{ currentExercise.equipment }}</p>
-      <p>To create a Routine for your Workout, please enter the information needed below...</p>
-      <p><b>Sets: </b><input type="text" v-model="newRoutine.sets"></p>
-      <p><b>Reps: </b><input type="text" v-model="newRoutine.reps"></p>
-      <p
-        v-if="currentExercise.equipment==`Body Weight` || currentExercise.equipment==`Assisted` || currentExercise.equipment==`Wheel Roller` || currentExercise.equipment == `Stability Ball`">
+      <p>To adde a Set for your Routine, please enter the information needed below and hit the "Add Set" button"</p>
+      <p><b>Current Sets: </b></p>
+      <p v-for="set in currentExercise.routine_sets">
+        {{ set.reps }} Reps by {{ set.added_weight }} lbs
+        <button class="btn btn-danger btn-sm" @click="removeSet(set)">-</button>
       </p>
-      <p v-else><b>Added Weight: </b><input type=" text" v-model="newRoutine.added_weight">
+      <p><b>Reps: </b><input type="text" v-model="newRoutineSet.reps"></p>
+      <p><b>Added Weight: </b><input type=" text" v-model="newRoutineSet.added_weight">
       </p>
+      <button type="button" class="btn btn-primary btn-sm" @click="this.addSet(currentExercise)">Small button</button>
+      <p></p>
       <button @click="routineCreate(currentExercise)">Create Routine...</button>
       <button>Close</button>
     </form>
