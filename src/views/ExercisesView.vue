@@ -12,6 +12,7 @@ export default {
       currentExercise: {},
       newRoutine: {},
       newRoutineSet: { sets: 0, reps: 0, added_weight: 0 },
+      newRoutineSets: [],
 
       exercisePageAmount: 0,
       exercisesPerPage: 15,
@@ -54,6 +55,7 @@ export default {
       // console.log(`Opening up options to add a routine...`)
       // console.log(exercise)
       this.newRoutine = {}
+      this.newRoutineSets = []
       this.currentExercise = exercise
       document.querySelector('#routine-details').showModal();
     },
@@ -61,39 +63,33 @@ export default {
       // console.log(`Creating new routine....`)
       // console.log(exercise)
       this.newRoutine.exercise_id = exercise.id
-      this.neRoutineSets.forEach(set => {
-        if (exercise.equipment == "Body Weight" || exercise.equipment == "Assisted" || exercise.equipment == "Wheeler Roller" || exercise.equipment == "Stability Ball") {
-          set.added_weight = 0
-        }
-
-      })
       // console.log(this.newRoutine)
       axios.post("http://localhost:3000/routines.json", this.newRoutine).then(response => {
         // console.log(response.data)
-        this.newRoutine = {}
+        this.newRoutine = (response.data)
+        this.routineSetCreate(exercise);
       })
       exercise.on_routine = true;
     },
-    routineSetCreate: function () {
-      axios.post("http://localhost:3000/routinesets.json", this.newRoutineSet).then(response => {
-        console.log(response.data)
+    routineSetCreate: function (exercise) {
+      this.newRoutineSets.forEach(set => {
+        set.routine_id = this.newRoutine.id
+        axios.post(`http://localhost:3000/routinesets`, set).then(response => {
+          console.log(response.data)
+        })
       })
     },
     addSet: function (currentExercise) {
       console.log("Adding Set")
       this.newRoutineSet.exercise_id = currentExercise.id
       console.log(this.newRoutineSet)
-      axios.post(`http://localhost:3000/routinesets`, this.newRoutineSet).then(response => {
-        console.log(response.data)
-        currentExercise.routine_sets.push(response.data)
-        this.newRoutineSet = { sets: 0, reps: 0, added_weight: 0 }
-      })
+      this.newRoutineSets.push(this.newRoutineSet)
+      this.newRoutineSet = { sets: 0, reps: 0, added_weight: 0 }
     },
     removeSet: function (set) {
-      axios.delete(`http://localhost:3000/routinesets/${set.id}`).then(response => {
-        console.log(response.data)
-        set = {}
-      })
+      console.log(this.newRoutineSets)
+      this.newRoutineSets.splice(set.id, 1)
+      console.log(this.newRoutineSets)
     },
     editRoutine: function () {
       this.$router.push("/routines")
@@ -175,6 +171,9 @@ export default {
     reloadPage: function () {
       window.location.reload();
     },
+    cancel: function () {
+      this.newRoutineSets = []
+    }
   },
 };
 </script>
@@ -279,17 +278,17 @@ export default {
       <p><b>Exercise Equipment:</b> {{ currentExercise.equipment }}</p>
       <p>To adde a Set for your Routine, please enter the information needed below and hit the "Add Set" button"</p>
       <p><b>Current Sets: </b></p>
-      <p v-for="set in currentExercise.routine_sets">
+      <p v-for="set in this.newRoutineSets">
         {{ set.reps }} Reps by {{ set.added_weight }} lbs
         <button class="btn btn-danger btn-sm" @click="removeSet(set)">-</button>
       </p>
       <p><b>Reps: </b><input type="text" v-model="newRoutineSet.reps"></p>
       <p><b>Added Weight: </b><input type=" text" v-model="newRoutineSet.added_weight">
       </p>
-      <button type="button" class="btn btn-primary btn-sm" @click="this.addSet(currentExercise)">Small button</button>
+      <button type="button" class="btn btn-primary btn-sm" @click="this.addSet(currentExercise)">Add Set</button>
       <p></p>
-      <button @click="routineCreate(currentExercise)">Create Routine...</button>
-      <button>Close</button>
+      <button @click="routineCreate(currentExercise)" btn="btn btn-primary">Create Routine...</button>
+      <button @click="this.cancel()" btn="btn btn-warning">Close</button>
     </form>
   </dialog>
   <!-- Pagination -->

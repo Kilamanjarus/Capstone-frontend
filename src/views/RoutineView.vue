@@ -19,7 +19,7 @@ export default {
     routineIndex: function () {
       // console.log("Pulling all Exercises added to workouts...")
       axios.get("http://localhost:3000/routines.json").then(response => {
-        // console.log(response.data)
+        console.log(response.data)
         this.routines = response.data
       })
     },
@@ -84,12 +84,12 @@ export default {
               <h5 class="card-text"><b>{{currentExercise.exercise.style}}</b></h5>
               <h4 class="card-text"><b>Equipment: </b>{{currentExercise.exercise.equipment}}</h4>
               <!-- Weight -->
-              <h4 class="card-text" v-if="currentExercise.added_weight != nil && editMode == false"><b>Added
+              <!-- <h4 class="card-text" v-if="currentExercise.sets != nil && editMode == false"><b>Added
                   Weight: </b>{{currentExercise.added_weight}}</h4>
               <h4 class="card-text" v-if="currentExercise.added_weight != nil && editMode == true"><b>Added Weight:
                 </b>
                 <input type="text" v-model="currentExercise.added_weight">
-              </h4>
+              </h4> -->
               <!-- Sets -->
               <h4 class="card-text" v-if="editMode == false"><b>Sets:
                 </b>{{currentExercise.sets}}</h4>
@@ -97,11 +97,11 @@ export default {
                 <input type="text" v-model="currentExercise.sets">
               </h4>
               <!-- Reps -->
-              <h4 class="card-text" v-if="editMode == false"><b>Reps:
+              <!-- <h4 class="card-text" v-if="editMode == false"><b>Reps:
                 </b>{{currentExercise.reps}}</h4>
               <h4 class="card-text" v-if="editMode == true"><b>Reps: </b>
                 <input type="text" v-model="currentExercise.reps">
-              </h4>
+              </h4> -->
               <!-- Update Button -->
               <button class="btn btn-primary" @click="routineUpdate(currentExercise)" v-if="editMode == true">Update
                 Exorcise</button>
