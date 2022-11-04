@@ -316,12 +316,10 @@ export default {
             <div>Exercise number {{idx + 1}} of {{this.workout.routines.length}}</div>
             <span>
               <b>Sets:</b>
-              <div v-if="routine.added_weight == null || routine.added_weight == 0" v-for="set in routine.sets">
-                {{set.added_weight}} lbs by {{set.reps}}
+              <div v-for="set in routine.sets">
+                <span v-if="set.added_weight != 0">{{set.added_weight}} lbs by {{set.reps}} reps</span>
+                <span v-if="set.added_weight == 0">{{set.reps}} reps</span>
               </div>
-              <div v-if="routine.added_weight != null  && routine.added_weight != 0">{{routine.sets}} Sets of
-                {{routine.reps}} with a weight
-                of {{routine.added_weight}}</div>
             </span>
           </div>
         </div>

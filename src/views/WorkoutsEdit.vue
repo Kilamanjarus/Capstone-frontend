@@ -25,17 +25,14 @@ export default {
     },
     routineUpdate: function (routine) {
       // console.log('Updating Exercise...')
-      // console.log(routine)
-      this.currentRoutine.added_weight = routine.added_weight
-      if (this.currentRoutine.added_weight == null) {
-        this.currentRoutine.added_weight = 0
-      }
-      this.currentRoutine.sets = routine.sets
-      this.currentRoutine.reps = routine.reps
-
-      axios.patch(`http://localhost:3000/routines/${routine.routine_id}.json`, this.currentRoutine).then(response => {
-        // console.log(response.data)
-        this.reloadPage();
+      // console.log(currentExercise)
+      routine.sets.forEach(set => {
+        axios.patch(`http://localhost:3000/routinesets/${set.id}.json`, set).then(response => {
+          console.log(response.data)
+        }).catch((error) => {
+          this.errors = error.response.data.errors;
+          // console.log(this.errors)
+        });
       })
     },
     routineDelete: function (routine) {
@@ -76,11 +73,12 @@ export default {
     <h2> {{workout.title}} </h2>
     <div v-for="routine in workout.routines">
       <h3><b>{{routine.exercise.name}}</b></h3>
-      <p><b>Exercise Style: </b>{{routine.exercise.style}}</p>
-      <p><b>Exercise Muscle: </b>{{routine.exercise.muscle}}</p>
-      <p><b>Weight: </b><input type="text" v-model="routine.added_weight">lbs</p>
-      <p><b>Reps: </b><input type="text" v-model="routine.reps">lbs</p>
-      <p><b>Sets: </b><input type="text" v-model="routine.sets">lbs</p>
+      <div><b>Exercise Style: </b>{{routine.exercise.style}}</div>
+      <div><b>Exercise Muscle: </b>{{routine.exercise.muscle}}</div>
+      <div><b>Sets: </b></div>
+      <div v-for="set in routine.sets"><input type="text" v-model="set.added_weight">lbs <input type="text"
+          v-model="set.reps">reps</div>
+      <p></p>
       <button class="btn btn-primary" @click="routineUpdate(routine)">Update Routine</button> | <button
         class="btn btn-danger" @click="this.routineDelete(routine)" onclick="">Delete Routine</button>
       <p></p>
