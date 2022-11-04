@@ -314,11 +314,15 @@ export default {
           <h2 class="exercise-name">{{routine.exercise.name}}</h2>
           <div class="bottom-text">
             <div>Exercise number {{idx + 1}} of {{this.workout.routines.length}}</div>
-            <div v-if="routine.added_weight == null || routine.added_weight == 0">{{routine.sets}} Sets of
-              {{routine.reps}}</div>
-            <div v-if="routine.added_weight != null  && routine.added_weight != 0">{{routine.sets}} Sets of
-              {{routine.reps}} with a weight
-              of {{routine.added_weight}}</div>
+            <span>
+              <b>Sets:</b>
+              <div v-if="routine.added_weight == null || routine.added_weight == 0" v-for="set in routine.sets">
+                {{set.added_weight}} lbs by {{set.reps}}
+              </div>
+              <div v-if="routine.added_weight != null  && routine.added_weight != 0">{{routine.sets}} Sets of
+                {{routine.reps}} with a weight
+                of {{routine.added_weight}}</div>
+            </span>
           </div>
         </div>
       </div>

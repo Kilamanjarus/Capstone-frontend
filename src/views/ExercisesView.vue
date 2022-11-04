@@ -285,10 +285,10 @@ export default {
       <p><b>Reps: </b><input type="text" v-model="newRoutineSet.reps"></p>
       <p><b>Added Weight: </b><input type=" text" v-model="newRoutineSet.added_weight">
       </p>
-      <button type="button" class="btn btn-primary btn-sm" @click="this.addSet(currentExercise)">Add Set</button>
+      <button type="button" class="btn btn-success btn-sm" @click="this.addSet(currentExercise)">Add Set</button>
       <p></p>
-      <button @click="routineCreate(currentExercise)" btn="btn btn-primary">Create Routine...</button>
-      <button @click="this.cancel()" btn="btn btn-warning">Close</button>
+      <button @click="routineCreate(currentExercise)" class="btn btn-primary">Create Routine...</button>
+      <button @click="this.cancel()" class="btn btn-warning">Close</button>
     </form>
   </dialog>
   <!-- Pagination -->
