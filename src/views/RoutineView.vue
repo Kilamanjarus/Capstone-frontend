@@ -26,14 +26,14 @@ export default {
     routineUpdate: function (currentExercise) {
       // console.log('Updating Exercise...')
       // console.log(currentExercise)
-      axios.patch(`http://localhost:3000/routines/${currentExercise.id}.json`, currentExercise).then(response => {
-        // console.log(response.data)
-        location.reload();
-      })
-        .catch((error) => {
+      currentExercise.sets.forEach(set => {
+        axios.patch(`http://localhost:3000/routinesets/${set.id}.json`, set).then(response => {
+          console.log(response.data)
+        }).catch((error) => {
           this.errors = error.response.data.errors;
           // console.log(this.errors)
         });
+      })
     },
     routineDelete: function (currentExercise) {
       if (confirm('Are you sure? Permanently delete routine from your workout?')) {
@@ -83,18 +83,20 @@ export default {
               <h3 class="card-title">{{currentExercise.exercise.name}}</h3>
               <h5 class="card-text"><b>{{currentExercise.exercise.style}}</b></h5>
               <h4 class="card-text"><b>Equipment: </b>{{currentExercise.exercise.equipment}}</h4>
-              <!-- Weight -->
-              <!-- <h4 class="card-text" v-if="currentExercise.sets != nil && editMode == false"><b>Added
-                  Weight: </b>{{currentExercise.added_weight}}</h4>
-              <h4 class="card-text" v-if="currentExercise.added_weight != nil && editMode == true"><b>Added Weight:
-                </b>
-                <input type="text" v-model="currentExercise.added_weight">
-              </h4> -->
               <!-- Sets -->
               <h4 class="card-text" v-if="editMode == false"><b>Sets:
-                </b>{{currentExercise.sets}}</h4>
-              <h4 class="card-text" v-if="editMode == true"><b>Sets: </b>
-                <input type="text" v-model="currentExercise.sets">
+                </b>
+                <h4 v-for="set in currentExercise.sets">
+                  <!-- Weight -->
+                  <h4>{{set.added_weight}} lbs by {{set.reps}} reps.</h4>
+                </h4>
+              </h4>
+              <h4 class="card-text" v-if="editMode == true"><b>Sets:
+                </b>
+                <h4 v-for="set in currentExercise.sets">
+                  <!-- Weight -->
+                  <input type="text" v-model="set.added_weight"> lbs by <input type="text" v-model="set.reps"> reps.
+                </h4>
               </h4>
               <!-- Reps -->
               <!-- <h4 class="card-text" v-if="editMode == false"><b>Reps:
